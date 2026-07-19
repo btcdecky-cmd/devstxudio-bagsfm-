@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProject, getBuilder, getBuilderProjects, formatCount, formatDate } from "@/lib/data";
+import { formatCount, formatDate, getProject, getBuilder, getBuilderProjects } from "@/lib/data";
 import { StatusBadge } from "@/components/status-badge";
 import { Avatar, Stat } from "@/components/avatar";
 import { UpdateTimeline } from "@/components/update-timeline";
