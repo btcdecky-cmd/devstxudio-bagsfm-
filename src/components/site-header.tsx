@@ -9,6 +9,7 @@ const links = [
   { href: "/incubator", label: "Incubator" },
   { href: "/builders", label: "Builders" },
   { href: "/github", label: "GitHub Finder" },
+  { href: "/access", label: "Access" },
   { href: "/dashboard", label: "Studio" },
 ];
 
@@ -48,7 +49,7 @@ export function SiteHeader() {
             @{currentUser.handle}
           </Link>
           <Link
-            href="/projects"
+            href="/access"
             className="rounded-lg border border-brand-600/60 bg-brand-500/10 px-3.5 py-2 text-sm font-medium text-brand-400 transition-colors hover:bg-brand-500/20"
           >
             Request access

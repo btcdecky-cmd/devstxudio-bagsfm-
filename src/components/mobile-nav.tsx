@@ -11,6 +11,7 @@ const links = [
   { href: "/incubator", label: "Incubator" },
   { href: "/builders", label: "Builders" },
   { href: "/github", label: "GitHub Finder" },
+  { href: "/access", label: "Access" },
   { href: "/dashboard", label: "Studio" },
 ];
 

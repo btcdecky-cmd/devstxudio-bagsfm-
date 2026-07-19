@@ -45,18 +45,18 @@ export default function Home() {
             from idea to launch.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/projects"
-              className="rounded-lg border border-brand-600/60 bg-brand-500/10 px-5 py-3 text-sm font-medium text-brand-400 transition-colors hover:bg-brand-500/20"
-            >
-              Enter the floor
-            </Link>
-            <Link
-              href="/dashboard"
-              className="rounded-lg border border-[var(--color-hairline)] px-5 py-3 text-sm font-medium text-neutral-200 transition-colors hover:border-brand-500"
-            >
-              Request a studio
-            </Link>
+          <Link
+            href="/access"
+            className="rounded-lg border border-brand-600/60 bg-brand-500/10 px-5 py-3 text-sm font-medium text-brand-400 transition-colors hover:bg-brand-500/20"
+          >
+            Enter the floor
+          </Link>
+          <Link
+            href="/access"
+            className="rounded-lg border border-[var(--color-hairline)] px-5 py-3 text-sm font-medium text-neutral-200 transition-colors hover:border-brand-500"
+          >
+            Request a studio
+          </Link>
           </div>
 
           <div className="rule mx-auto mt-14 max-w-md" />
@@ -229,7 +229,7 @@ export default function Home() {
             follow every step from idea to launch.
           </p>
           <Link
-            href="/dashboard"
+            href="/access"
             className="mt-7 inline-block rounded-lg border border-brand-600/60 bg-brand-500/10 px-6 py-3 text-sm font-medium text-brand-400 transition-colors hover:bg-brand-500/20"
           >
             Request a studio

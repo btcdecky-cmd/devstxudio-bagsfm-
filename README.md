@@ -18,6 +18,7 @@ A private atelier for public builders — a members' platform for developers who
 - **Builders** — Directory of builders ranked by followers, with stack chips and project previews
 - **Studio** — Personal dashboard for managing projects, tracking stats, and posting updates
 - **GitHub Finder** — Search public GitHub repositories by name, topic, or owner
+- **Developer Access** — Verify pump.fun (bagsfm) token ownership to request access
 
 ## Tech Stack
 
@@ -29,6 +30,7 @@ A private atelier for public builders — a members' platform for developers who
 | Package manager | Bun |
 | Linting | ESLint |
 | Styling | Custom dark + gold theme with glassmorphism |
+| Blockchain | Solana, @solana/web3.js, @solana/spl-token-registry |
 
 ## Getting Started
 
@@ -88,6 +90,8 @@ src/
     live/page.tsx           Live Build Feed
     github/
       page.tsx              GitHub Repository Finder
+    access/
+      page.tsx              Developer Access (pump.fun verification)
     globals.css             Tailwind theme tokens, utilities, animations
   components/
     site-header.tsx         Sticky nav
@@ -103,6 +107,7 @@ src/
     mobile-bottom-nav.tsx   Mobile bottom tab bar (client)
     github-repo-finder.tsx  GitHub repository search (client)
     token-badge.tsx         Solana token badge with logo (client)
+    access-request.tsx      Developer access verification (client)
   lib/
     data.ts                 Mock data, types, and helpers
     solana.ts               Solana token registry + web3.js utilities
