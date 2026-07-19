@@ -5,8 +5,8 @@ export function SiteFooter() {
     <footer className="border-t border-line/80">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-2.5">
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 text-sm font-bold text-white">
-            ◆
+          <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 text-sm">
+            💰
           </span>
           <span className="font-semibold">Dev Studio</span>
           <span className="text-sm text-neutral-500">— build in public</span>

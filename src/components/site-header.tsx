@@ -16,8 +16,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-line/80 glass">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 font-bold text-white shadow-lg shadow-brand-500/30">
-            ◆
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 text-sm shadow-lg shadow-brand-500/30">
+            💰
           </span>
           <span className="text-[15px] font-semibold tracking-tight">Dev Studio</span>
         </Link>
