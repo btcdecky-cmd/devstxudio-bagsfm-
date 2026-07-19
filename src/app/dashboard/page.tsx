@@ -39,7 +39,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <Link
-          href="/projects"
+          href="/projects/new"
           className="btn-gold"
         >
           + New project

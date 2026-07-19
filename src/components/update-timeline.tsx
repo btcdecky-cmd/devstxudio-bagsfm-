@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type { Update, UpdateKind } from "@/lib/data";
 import { formatCount, formatDate } from "@/lib/data";
 
@@ -16,6 +19,21 @@ export function UpdateTimeline({
   updates: Update[];
   projectsById?: Record<string, { name: string; href: string }>;
 }) {
+  const [reactions, setReactions] = useState<Record<string, number>>(
+    Object.fromEntries(updates.map((u) => [u.id, u.reactions]))
+  );
+  const [comments, setComments] = useState<Record<string, number>>(
+    Object.fromEntries(updates.map((u) => [u.id, u.comments]))
+  );
+
+  function toggleReaction(id: string) {
+    setReactions((prev) => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
+  }
+
+  function toggleComment(id: string) {
+    setComments((prev) => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
+  }
+
   return (
     <ol className="relative space-y-6 border-l border-line pl-6">
       {updates.map((update) => {
@@ -43,8 +61,18 @@ export function UpdateTimeline({
               <h4 className="font-medium text-white">{update.title}</h4>
               <p className="mt-1 text-sm leading-relaxed text-neutral-400">{update.body}</p>
               <div className="mt-3 flex items-center gap-4 text-xs text-neutral-500">
-                <span>▲ {formatCount(update.reactions)}</span>
-                <span>💬 {formatCount(update.comments)}</span>
+                <button
+                  onClick={() => toggleReaction(update.id)}
+                  className="transition-colors hover:text-brand-400"
+                >
+                  ▲ {formatCount(reactions[update.id] ?? update.reactions)}
+                </button>
+                <button
+                  onClick={() => toggleComment(update.id)}
+                  className="transition-colors hover:text-brand-400"
+                >
+                  💬 {formatCount(comments[update.id] ?? update.comments)}
+                </button>
               </div>
             </div>
           </li>
