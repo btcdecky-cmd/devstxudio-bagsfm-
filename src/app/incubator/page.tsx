@@ -5,6 +5,7 @@ import {
   getBuilder,
 } from "@/lib/data";
 import { Avatar } from "@/components/avatar";
+import { TokenBadge } from "@/components/token-badge";
 
 export const metadata = {
   title: "Project Incubator & IPO — Dev Studio",
@@ -73,9 +74,7 @@ export default function IncubatorPage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-white">{p.name}</h3>
-                        <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-xs font-medium text-white">
-                          {p.coin}
-                        </span>
+                        <TokenBadge symbol={p.coin} mint={p.mint} />
                       </div>
                       <p className="mt-1 text-sm text-neutral-400">{p.tagline}</p>
                     </div>

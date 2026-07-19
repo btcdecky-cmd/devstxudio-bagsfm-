@@ -469,6 +469,7 @@ export type IncubatorProject = {
   id: string;
   name: string;
   coin: string;
+  mint?: string;
   tagline: string;
   apps: number;
   raised: number; // USD
@@ -479,10 +480,10 @@ export type IncubatorProject = {
 };
 
 export const incubatorProjects: IncubatorProject[] = [
-  { id: "i1", name: "Nebula Labs", coin: "$NEB", tagline: "Consumer app suite bundled under one tradable coin", apps: 4, raised: 420000, status: "live", vesting: "12% TGE / 6mo linear", builderId: "b1", accent: "from-amber-600 to-yellow-700" },
-  { id: "i2", name: "BlockForge", coin: "$FORGE", tagline: "Incubator-backed builder tooling ecosystem", apps: 3, raised: 180000, status: "ipo", vesting: "15% TGE / 9mo linear", builderId: "b3", accent: "from-amber-500 to-yellow-600" },
-  { id: "i3", name: "PixelUnion", coin: "$PXU", tagline: "On-chain games + social apps for one community", apps: 5, raised: 0, status: "incubating", vesting: "TBD", builderId: "b4", accent: "from-yellow-600 to-amber-700" },
-  { id: "i4", name: "SignalStack", coin: "$SIG", tagline: "ML tooling wrapped as a tradable asset", apps: 2, raised: 260000, status: "ipo", vesting: "10% TGE / 12mo linear", builderId: "b5", accent: "from-amber-700 to-yellow-600" },
+  { id: "i1", name: "Nebula Labs", coin: "$NEB", mint: "NEBula111111111111111111111111111111111111111", tagline: "Consumer app suite bundled under one tradable coin", apps: 4, raised: 420000, status: "live", vesting: "12% TGE / 6mo linear", builderId: "b1", accent: "from-amber-600 to-yellow-700" },
+  { id: "i2", name: "BlockForge", coin: "$FORGE", mint: "FORGE1111111111111111111111111111111111111111", tagline: "Incubator-backed builder tooling ecosystem", apps: 3, raised: 180000, status: "ipo", vesting: "15% TGE / 9mo linear", builderId: "b3", accent: "from-amber-500 to-yellow-600" },
+  { id: "i3", name: "PixelUnion", coin: "$PXU", mint: "PXU11111111111111111111111111111111111111111", tagline: "On-chain games + social apps for one community", apps: 5, raised: 0, status: "incubating", vesting: "TBD", builderId: "b4", accent: "from-yellow-600 to-amber-700" },
+  { id: "i4", name: "SignalStack", coin: "$SIG", mint: "SIG11111111111111111111111111111111111111111", tagline: "ML tooling wrapped as a tradable asset", apps: 2, raised: 260000, status: "ipo", vesting: "10% TGE / 12mo linear", builderId: "b5", accent: "from-amber-700 to-yellow-600" },
 ];
 
 export const incubatorSteps = [
