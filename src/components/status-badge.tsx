@@ -4,7 +4,7 @@ const statusStyles: Record<Project["status"], string> = {
   idea: "bg-neutral-500/15 text-neutral-300 ring-neutral-400/30",
   building: "bg-brand-500/15 text-brand-400 ring-brand-400/30",
   beta: "bg-accent-500/15 text-accent-400 ring-accent-400/30",
-  launched: "bg-emerald-500/15 text-emerald-300 ring-emerald-400/30",
+  launched: "bg-gold-500/15 text-gold-400 ring-gold-400/30",
 };
 
 const statusLabel: Record<Project["status"], string> = {

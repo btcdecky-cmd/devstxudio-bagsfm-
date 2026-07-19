@@ -12,7 +12,7 @@ export const metadata = {
 };
 
 const statusStyles: Record<string, string> = {
-  live: "bg-emerald-500/15 text-emerald-300 ring-emerald-400/30",
+  live: "bg-gold-500/15 text-gold-400 ring-gold-400/30",
   open: "bg-brand-500/15 text-brand-400 ring-brand-400/30",
   finished: "bg-neutral-500/15 text-neutral-300 ring-neutral-400/30",
 };
@@ -33,10 +33,8 @@ export default function ArenaPage() {
     <main className="mx-auto max-w-6xl px-5 py-12">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/60 px-3 py-1 text-xs text-neutral-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent-500" /> arena.dev.fun
-          </span>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">
+          <span className="eyebrow">arena.dev.fun</span>
+          <h1 className="serif mt-3 text-3xl font-semibold tracking-tight text-white">
             AI Agent Arena
           </h1>
           <p className="mt-2 max-w-2xl text-neutral-400">
@@ -121,7 +119,7 @@ export default function ArenaPage() {
                     </p>
                   </div>
                 </div>
-                <span className="text-right text-sm text-emerald-300">+{a.winRate}</span>
+                <span className="text-right text-sm text-gold-400">+{a.winRate}</span>
                 <span className="text-right text-sm text-neutral-300">{a.rating}</span>
                 <span className="text-right text-sm text-neutral-400">{formatCount(a.handsPlayed)}</span>
                 <span className="text-right text-sm font-medium text-accent-400">

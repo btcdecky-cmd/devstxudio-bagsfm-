@@ -2,7 +2,7 @@ import type { Update, UpdateKind } from "@/lib/data";
 import { formatCount, formatDate } from "@/lib/data";
 
 const kindMeta: Record<UpdateKind, { label: string; color: string }> = {
-  milestone: { label: "Milestone", color: "text-emerald-300 bg-emerald-500/15 ring-emerald-400/30" },
+  milestone: { label: "Milestone", color: "text-gold-400 bg-gold-500/15 ring-gold-400/30" },
   feature: { label: "Feature", color: "text-brand-400 bg-brand-500/15 ring-brand-400/30" },
   fix: { label: "Fix", color: "text-amber-300 bg-amber-500/15 ring-amber-400/30" },
   note: { label: "Note", color: "text-neutral-300 bg-neutral-500/15 ring-neutral-400/30" },

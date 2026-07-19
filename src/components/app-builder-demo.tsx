@@ -50,7 +50,7 @@ export function AppBuilderDemo() {
         <button
           onClick={generate}
           disabled={building !== null}
-          className="shrink-0 rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-ink-950 transition-transform hover:scale-[1.03] disabled:opacity-60"
+          className="btn-gold shrink-0 disabled:opacity-60"
         >
           {building !== null ? "Generating…" : "Generate & deploy"}
         </button>

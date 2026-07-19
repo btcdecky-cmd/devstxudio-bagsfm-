@@ -29,7 +29,7 @@ export default function DashboardPage() {
         <div className="flex items-center gap-4">
           <Avatar name={currentUser.name} initials={currentUser.avatar} size="lg" />
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-white">
+            <h1 className="serif text-2xl font-semibold tracking-tight text-white">
               {currentUser.name}
             </h1>
             <p className="text-sm text-neutral-500">
@@ -40,7 +40,7 @@ export default function DashboardPage() {
         </div>
         <Link
           href="/projects"
-          className="rounded-xl bg-white px-4 py-2.5 text-sm font-medium text-ink-950 transition-transform hover:scale-[1.03]"
+          className="btn-gold"
         >
           + New project
         </Link>

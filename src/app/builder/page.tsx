@@ -13,10 +13,8 @@ export default function BuilderPage() {
   return (
     <main className="mx-auto max-w-6xl px-5 py-12">
       <div className="mb-8">
-        <span className="inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/60 px-3 py-1 text-xs text-neutral-400">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent-500" /> dev-fun.gitbook.io
-        </span>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">
+        <span className="eyebrow">dev-fun.gitbook.io</span>
+        <h1 className="serif mt-3 text-3xl font-semibold tracking-tight text-white">
           AI-Powered App Builder
         </h1>
         <p className="mt-2 max-w-2xl text-neutral-400">
@@ -32,9 +30,7 @@ export default function BuilderPage() {
       <section className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {appBuilderFeatures.map((f, i) => (
           <div key={i} className="card-hover rounded-2xl border border-line bg-ink-900/60 p-5">
-            <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-brand-500/20 to-accent-500/20 text-brand-400 ring-1 ring-inset ring-brand-400/20">
-              ◆
-            </span>
+            <span className="serif text-xl text-brand-500">◆</span>
             <p className="mt-3 text-sm text-neutral-300">{f}</p>
           </div>
         ))}

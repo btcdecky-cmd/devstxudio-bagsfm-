@@ -8,26 +8,31 @@ const links = [
   { href: "/builder", label: "App Builder" },
   { href: "/incubator", label: "Incubator" },
   { href: "/builders", label: "Builders" },
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/dashboard", label: "Studio" },
 ];
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-line/80 glass">
+    <header className="sticky top-0 z-50 border-b border-[var(--color-hairline)] glass">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
         <Link href="/" className="flex items-center gap-2.5">
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-500 text-sm shadow-lg shadow-brand-500/40">
             💰
           </span>
-          <span className="text-[15px] font-semibold tracking-tight">Dev Studio</span>
+          <span className="serif text-lg font-semibold tracking-tight text-white">
+            Dev&nbsp;Studio
+          </span>
+          <span className="hidden border-l border-[var(--color-hairline)] pl-2.5 text-[0.65rem] uppercase tracking-[0.25em] text-brand-500 sm:block">
+            Est. Build
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="rounded-md px-3 py-2 text-sm text-neutral-300 transition-colors hover:bg-white/5 hover:text-white"
+              className="rounded-md px-3 py-2 text-sm text-neutral-400 transition-colors hover:bg-white/5 hover:text-brand-400"
             >
               {l.label}
             </Link>
@@ -37,15 +42,15 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
-            className="hidden text-sm text-neutral-300 hover:text-white sm:block"
+            className="hidden text-sm text-neutral-400 hover:text-brand-400 sm:block"
           >
             @{currentUser.handle}
           </Link>
           <Link
             href="/projects"
-            className="rounded-lg bg-white px-3.5 py-2 text-sm font-medium text-ink-950 transition-transform hover:scale-[1.03]"
+            className="rounded-lg border border-brand-600/60 bg-brand-500/10 px-3.5 py-2 text-sm font-medium text-brand-400 transition-colors hover:bg-brand-500/20"
           >
-            Start building
+            Request access
           </Link>
         </div>
       </div>

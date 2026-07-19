@@ -11,9 +11,9 @@ export const metadata = {
 };
 
 const statusStyles: Record<string, string> = {
-  incubating: "bg-amber-500/15 text-amber-300 ring-amber-400/30",
+  incubating: "bg-brand-500/15 text-brand-400 ring-brand-400/30",
   ipo: "bg-brand-500/15 text-brand-400 ring-brand-400/30",
-  live: "bg-emerald-500/15 text-emerald-300 ring-emerald-400/30",
+  live: "bg-gold-500/15 text-gold-400 ring-gold-400/30",
 };
 
 export default function IncubatorPage() {
@@ -24,7 +24,7 @@ export default function IncubatorPage() {
     <main className="mx-auto max-w-6xl px-5 py-12">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-white">
+          <h1 className="serif text-3xl font-semibold tracking-tight text-white">
             Project Incubator &amp; IPO
           </h1>
           <p className="mt-2 max-w-2xl text-neutral-400">

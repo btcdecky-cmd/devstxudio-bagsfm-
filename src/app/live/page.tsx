@@ -15,10 +15,10 @@ export default function LivePage() {
   return (
     <main className="mx-auto max-w-6xl px-5 py-12">
       <div className="mb-8">
-        <span className="inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/60 px-3 py-1 text-xs text-neutral-400">
+        <span className="eyebrow inline-flex items-center gap-2">
           <span className="live-dot h-1.5 w-1.5 rounded-full bg-brand-500" /> real-time
         </span>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">Live Build Feed</h1>
+        <h1 className="serif mt-3 text-3xl font-semibold tracking-tight text-white">Live Build Feed</h1>
         <p className="mt-2 max-w-2xl text-neutral-400">
           A powerful real-time stream of everything happening across Dev Studio — agent matches,
           commits, deploys, launches, and token IPOs, as they happen. Watch applications evolve

@@ -34,7 +34,7 @@ export default async function ProjectPage({
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-semibold tracking-tight text-white">
+                <h1 className="serif text-3xl font-semibold tracking-tight text-white">
                   {project.name}
                 </h1>
                 <StatusBadge status={project.status} />
@@ -77,7 +77,7 @@ export default async function ProjectPage({
       {/* Body */}
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_280px]">
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-white">About</h2>
+          <h2 className="serif mb-3 text-lg font-semibold text-white">About</h2>
           <p className="leading-relaxed text-neutral-300">{project.description}</p>
 
           <div className="mt-3 flex flex-wrap gap-2">
@@ -91,7 +91,7 @@ export default async function ProjectPage({
             ))}
           </div>
 
-          <h2 className="mb-4 mt-8 text-lg font-semibold text-white">Build log</h2>
+          <h2 className="serif mb-4 mt-8 text-lg font-semibold text-white">Build log</h2>
           <UpdateTimeline updates={project.updates} />
         </section>
 

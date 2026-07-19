@@ -4,26 +4,26 @@ import { ProjectCard } from "@/components/project-card";
 import { Avatar, Stat } from "@/components/avatar";
 import { StatusBadge } from "@/components/status-badge";
 
-const features = [
+const pillars = [
   {
-    title: "Create projects",
-    body: "Spin up a project in seconds and give your idea a home. Track status from idea to launch.",
-    icon: "◆",
+    title: "Curate a project",
+    body: "Give your idea a home among a considered circle of builders. Track its standing from first commit to launch.",
+    icon: "I",
   },
   {
-    title: "Share updates",
-    body: "Post milestones, features, and fixes as you build. Your followers watch the journey unfold.",
-    icon: "▲",
+    title: "Disclose your work",
+    body: "Publish milestones, features, and fixes as you go. Members follow the arc of your craft in real time.",
+    icon: "II",
   },
   {
-    title: "Track progress",
-    body: "A public progress bar and timeline keep you accountable and your community in the loop.",
-    icon: "◈",
+    title: "Measure the climb",
+    body: "A measured progress and an honest timeline keep you accountable to the people who matter.",
+    icon: "III",
   },
   {
-    title: "Build in public",
-    body: "Discover other builders, explore projects early, and grow an audience around your work.",
-    icon: "✦",
+    title: "Belong to the guild",
+    body: "Discover fellow builders, study work early, and build a quiet following around what you make.",
+    icon: "IV",
   },
 ];
 
@@ -34,59 +34,51 @@ export default function Home() {
     <main>
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-5 pb-16 pt-20 md:pt-28">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/60 px-3 py-1 text-xs text-neutral-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent-500" />
-              The platform for builders who ship in the open
-            </span>
-            <h1 className="mt-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl">
-              Build in public with <span className="gradient-text">Dev Studio</span>
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-neutral-400">
-              Dev Studio is a builder platform for developers who want to build in public.
-              Create projects, share updates, and track development progress while your
-              community follows the journey from idea to launch.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/projects"
-                className="rounded-xl bg-white px-5 py-3 text-sm font-medium text-ink-950 transition-transform hover:scale-[1.03]"
-              >
-                Explore projects
-              </Link>
-              <Link
-                href="/dashboard"
-                className="rounded-xl border border-line bg-ink-900/60 px-5 py-3 text-sm font-medium text-white transition-colors hover:border-brand-500"
-              >
-                Start your studio
-              </Link>
-            </div>
+        <div className="mx-auto max-w-5xl px-5 pb-16 pt-20 text-center md:pt-28">
+          <span className="eyebrow">A private circle for public builders</span>
+          <h1 className="serif mx-auto mt-6 max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl">
+            Build in the open, <span className="gradient-text">among peers</span>
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-neutral-400">
+            Dev Studio is a members&apos; atelier for developers who build in public — a place to
+            keep a project, share its progress, and let a discerning community follow the journey
+            from idea to launch.
+          </p>
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/projects"
+              className="rounded-lg border border-brand-600/60 bg-brand-500/10 px-5 py-3 text-sm font-medium text-brand-400 transition-colors hover:bg-brand-500/20"
+            >
+              Enter the floor
+            </Link>
+            <Link
+              href="/dashboard"
+              className="rounded-lg border border-[var(--color-hairline)] px-5 py-3 text-sm font-medium text-neutral-200 transition-colors hover:border-brand-500"
+            >
+              Request a studio
+            </Link>
+          </div>
 
-            <div className="mx-auto mt-12 flex max-w-md items-center justify-between rounded-2xl border border-line bg-ink-900/60 p-5">
-              <Stat label="Projects" value={projects.length * 142} />
-              <span className="h-8 w-px bg-line" />
-              <Stat label="Builders" value={builders.length * 318} />
-              <span className="h-8 w-px bg-line" />
-              <Stat label="Updates" value={projects.reduce((a, p) => a + p.updates.length, 0) * 96} />
-            </div>
+          <div className="rule mx-auto mt-14 max-w-md" />
+
+          <div className="mx-auto mt-8 flex max-w-md items-center justify-between">
+            <Stat label="Projects" value={projects.length * 142} />
+            <span className="h-8 w-px bg-[var(--color-hairline)]" />
+            <Stat label="Builders" value={builders.length * 318} />
+            <span className="h-8 w-px bg-[var(--color-hairline)]" />
+            <Stat label="Disclosures" value={projects.reduce((a, p) => a + p.updates.length, 0) * 96} />
           </div>
         </div>
       </section>
 
-      {/* Features */}
+      {/* Pillars */}
       <section className="mx-auto max-w-6xl px-5 py-12">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((f) => (
-            <div
-              key={f.title}
-              className="card-hover rounded-2xl border border-line bg-ink-900/60 p-5"
-            >
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-brand-500/20 to-accent-500/20 text-lg text-brand-400 ring-1 ring-inset ring-brand-400/20">
-                {f.icon}
-              </span>
-              <h3 className="mt-4 font-medium text-white">{f.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-neutral-400">{f.body}</p>
+        <div className="grid gap-px overflow-hidden rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-hairline)] sm:grid-cols-2 lg:grid-cols-4">
+          {pillars.map((f) => (
+            <div key={f.title} className="bg-ink-900/70 p-6">
+              <span className="serif text-lg text-brand-500">{f.icon}</span>
+              <h3 className="serif mt-3 text-lg font-medium text-white">{f.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-neutral-400">{f.body}</p>
             </div>
           ))}
         </div>
@@ -96,15 +88,13 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-5 py-12">
         <div className="mb-6 flex items-end justify-between">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-white">
+            <span className="eyebrow">Currently in residence</span>
+            <h2 className="serif mt-2 text-2xl font-semibold tracking-tight text-white">
               Projects gaining momentum
             </h2>
-            <p className="mt-1 text-sm text-neutral-400">
-              Watch applications evolve in real time, from idea to launch.
-            </p>
           </div>
           <Link href="/projects" className="text-sm text-brand-400 hover:underline">
-            View all →
+            View the collection →
           </Link>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -118,11 +108,13 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-5 py-12">
         <div className="mb-6 flex items-end justify-between">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-white">Latest from the community</h2>
-            <p className="mt-1 text-sm text-neutral-400">Real-time updates from builders you can follow.</p>
+            <span className="eyebrow">From the members</span>
+            <h2 className="serif mt-2 text-2xl font-semibold tracking-tight text-white">
+              Latest disclosures
+            </h2>
           </div>
           <Link href="/builders" className="text-sm text-brand-400 hover:underline">
-            Meet builders →
+            Meet the builders →
           </Link>
         </div>
         <div className="grid gap-3 md:grid-cols-2">
@@ -130,7 +122,7 @@ export default function Home() {
             <Link
               key={update.id}
               href={`/projects/${project.slug}`}
-              className="card-hover flex items-start gap-3 rounded-xl border border-line bg-ink-900/60 p-4"
+              className="card-hover flex items-start gap-3 rounded-xl border border-[var(--color-hairline)] bg-ink-900/60 p-4"
             >
               <Avatar name={builder.name} initials={builder.avatar} size="sm" />
               <div className="min-w-0 flex-1">
@@ -142,7 +134,7 @@ export default function Home() {
                   <span className="font-medium text-brand-400">{update.title}</span> · {project.name}
                 </p>
                 <p className="mt-0.5 line-clamp-1 text-xs text-neutral-500">
-                  {formatCount(update.reactions)} reactions · {formatCount(update.comments)} comments
+                  {formatCount(update.reactions)} reactions · {formatCount(update.comments)} notes
                 </p>
               </div>
             </Link>
@@ -153,45 +145,52 @@ export default function Home() {
       {/* Platform features */}
       <section className="mx-auto max-w-6xl px-5 py-12">
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold tracking-tight text-white">Beyond the build log</h2>
+          <span className="eyebrow">The wider estate</span>
+          <h2 className="serif mt-2 text-2xl font-semibold tracking-tight text-white">
+            Beyond the build log
+          </h2>
           <p className="mt-1 text-sm text-neutral-400">
-            Dev Studio is a full consumer-crypto builder ecosystem — compete, generate, and launch.
+            A considered ecosystem for those who compete, generate, and launch.
           </p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           <Link
             href="/arena"
-            className="card-hover group rounded-2xl border border-line bg-ink-900/60 p-5"
+            className="card-hover group rounded-2xl border border-[var(--color-hairline)] bg-ink-900/60 p-5"
           >
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-brand-500/20 to-accent-500/20 text-lg text-brand-400 ring-1 ring-inset ring-brand-400/20">
-              ♠
-            </span>
-            <h3 className="mt-4 font-medium text-white group-hover:text-brand-400">AI Agent Arena</h3>
+            <span className="serif text-2xl text-brand-500">♠</span>
+            <h3 className="serif mt-4 text-lg font-medium text-white group-hover:text-brand-400">
+              AI Agent Arena
+            </h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-neutral-400">
+              Poker-playing agents grind 6-max NLHE in measured tournaments with prizepools and a
+              transparent, recorded ledger.
+            </p>
           </Link>
           <Link
             href="/builder"
-            className="card-hover group rounded-2xl border border-line bg-ink-900/60 p-5"
+            className="card-hover group rounded-2xl border border-[var(--color-hairline)] bg-ink-900/60 p-5"
           >
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-brand-500/20 to-accent-500/20 text-lg text-brand-400 ring-1 ring-inset ring-brand-400/20">
-              ◆
-            </span>
-            <h3 className="mt-4 font-medium text-white group-hover:text-brand-400">AI App Builder</h3>
+            <span className="serif text-2xl text-brand-500">◆</span>
+            <h3 className="serif mt-4 text-lg font-medium text-white group-hover:text-brand-400">
+              AI App Builder
+            </h3>
             <p className="mt-1.5 text-sm leading-relaxed text-neutral-400">
-              Describe an app in plain language and ship it in under a minute — linked to pump.fun
-              tokens for trading, community, and on-chain features.
+              Describe an app in plain language and have it built in under a minute — linked to
+              pump.fun tokens for community and trade.
             </p>
           </Link>
           <Link
             href="/incubator"
-            className="card-hover group rounded-2xl border border-line bg-ink-900/60 p-5"
+            className="card-hover group rounded-2xl border border-[var(--color-hairline)] bg-ink-900/60 p-5"
           >
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 text-lg text-amber-300 ring-1 ring-inset ring-amber-400/20">
-              ⬡
-            </span>
-            <h3 className="mt-4 font-medium text-white group-hover:text-brand-400">Incubator &amp; IPO</h3>
+            <span className="serif text-2xl text-brand-500">⬡</span>
+            <h3 className="serif mt-4 text-lg font-medium text-white group-hover:text-brand-400">
+              Incubator &amp; IPO
+            </h3>
             <p className="mt-1.5 text-sm leading-relaxed text-neutral-400">
-              Bundle apps into on-chain businesses, get incubator support, and run pump.fun IPOs
-              with vesting that aligns creators, users, and traders.
+              Gather apps into on-chain houses, receive patronage, and list a pump.fun IPO with
+              vesting that aligns all parties.
             </p>
           </Link>
         </div>
@@ -201,38 +200,39 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-5">
         <Link
           href="/live"
-          className="card-hover group flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-gradient-to-br from-brand-500/10 to-accent-500/10 p-5"
+          className="card-hover group flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--color-hairline)] bg-gradient-to-br from-brand-500/10 to-transparent p-5"
         >
           <div className="flex items-center gap-3">
             <span className="live-dot h-2.5 w-2.5 rounded-full bg-brand-500" />
             <div>
-              <p className="font-medium text-white">Live Build Feed</p>
+              <p className="serif font-medium text-white">The Live Floor</p>
               <p className="text-sm text-neutral-400">
-                Watch agents, commits, launches, and IPOs stream in real time.
+                Watch agents, commits, launches, and IPOs unfold in real time.
               </p>
             </div>
           </div>
-          <span className="rounded-lg border border-line px-4 py-2 text-sm text-brand-400 transition-colors group-hover:border-brand-500">
-            Open feed →
+          <span className="rounded-lg border border-[var(--color-hairline)] px-4 py-2 text-sm text-brand-400 transition-colors group-hover:border-brand-500">
+            Enter →
           </span>
         </Link>
       </section>
 
       {/* CTA */}
       <section className="mx-auto max-w-6xl px-5 py-16">
-        <div className="relative overflow-hidden rounded-3xl border border-line bg-gradient-to-br from-brand-500/15 via-ink-900/60 to-accent-500/15 p-10 text-center md:p-16">
-          <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
-            Start your build-in-public journey
+        <div className="relative overflow-hidden rounded-3xl border border-[var(--color-hairline)] bg-gradient-to-br from-brand-500/10 via-ink-900/60 to-transparent p-10 text-center md:p-16">
+          <span className="eyebrow">By invitation &amp; by craft</span>
+          <h2 className="serif mt-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
+            Claim your place at the bench
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-neutral-400">
-            Create your first project, post your first update, and let your community follow
-            every step from idea to launch.
+            Keep your first project, post your first disclosure, and let a considered community
+            follow every step from idea to launch.
           </p>
           <Link
             href="/dashboard"
-            className="mt-7 inline-block rounded-xl bg-white px-6 py-3 text-sm font-medium text-ink-950 transition-transform hover:scale-[1.03]"
+            className="mt-7 inline-block rounded-lg border border-brand-600/60 bg-brand-500/10 px-6 py-3 text-sm font-medium text-brand-400 transition-colors hover:bg-brand-500/20"
           >
-            Open your studio
+            Request a studio
           </Link>
         </div>
       </section>
