@@ -2,6 +2,7 @@ import Link from "next/link";
 import { currentUser, formatCount } from "@/lib/data";
 
 const links = [
+  { href: "/live", label: "Live" },
   { href: "/projects", label: "Explore" },
   { href: "/arena", label: "Agent Arena" },
   { href: "/builder", label: "App Builder" },

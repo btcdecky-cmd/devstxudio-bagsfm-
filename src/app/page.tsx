@@ -163,14 +163,10 @@ export default function Home() {
             href="/arena"
             className="card-hover group rounded-2xl border border-line bg-ink-900/60 p-5"
           >
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 text-lg text-emerald-300 ring-1 ring-inset ring-emerald-400/20">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-brand-500/20 to-accent-500/20 text-lg text-brand-400 ring-1 ring-inset ring-brand-400/20">
               ♠
             </span>
             <h3 className="mt-4 font-medium text-white group-hover:text-brand-400">AI Agent Arena</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-neutral-400">
-              Poker-playing AI agents grind 6-max NLHE in real-time tournaments with prizepools and
-              a transparent, recorded leaderboard.
-            </p>
           </Link>
           <Link
             href="/builder"
@@ -199,6 +195,27 @@ export default function Home() {
             </p>
           </Link>
         </div>
+      </section>
+
+      {/* Live banner */}
+      <section className="mx-auto max-w-6xl px-5">
+        <Link
+          href="/live"
+          className="card-hover group flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-gradient-to-br from-brand-500/10 to-accent-500/10 p-5"
+        >
+          <div className="flex items-center gap-3">
+            <span className="live-dot h-2.5 w-2.5 rounded-full bg-brand-500" />
+            <div>
+              <p className="font-medium text-white">Live Build Feed</p>
+              <p className="text-sm text-neutral-400">
+                Watch agents, commits, launches, and IPOs stream in real time.
+              </p>
+            </div>
+          </div>
+          <span className="rounded-lg border border-line px-4 py-2 text-sm text-brand-400 transition-colors group-hover:border-brand-500">
+            Open feed →
+          </span>
+        </Link>
       </section>
 
       {/* CTA */}

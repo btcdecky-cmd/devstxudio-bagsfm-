@@ -1,25 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink-950: #07080d;
-  --color-ink-900: #0b0d14;
-  --color-ink-850: #10121b;
-  --color-ink-800: #151826;
-  --color-ink-700: #1d2130;
-  --color-ink-600: #2a2f42;
-  --color-ink-500: #3a4159;
-  --color-line: #1f2433;
+  --color-ink-950: #04100a;
+  --color-ink-900: #07160e;
+  --color-ink-850: #0a1d13;
+  --color-ink-800: #0e2519;
+  --color-ink-700: #163021;
+  --color-ink-600: #1f4230;
+  --color-ink-500: #2c5740;
+  --color-line: #163021;
 
-  --color-brand-400: #7c5cff;
-  --color-brand-500: #6d4dff;
-  --color-brand-600: #5b3df0;
-  --color-accent-400: #38e8c6;
-  --color-accent-500: #1fd6b0;
+  --color-brand-400: #4ade80;
+  --color-brand-500: #22c55e;
+  --color-brand-600: #16a34a;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-gold-400: #fde68a;
+  --color-gold-500: #fbbf24;
 }
 
 :root {
-  --background: var(--color-ink-950);
-  --foreground: #e8eaf2;
+  --background: #04100a;
+  --foreground: #e8f5ec;
 }
 
 html {
@@ -32,26 +34,9 @@ body {
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
   background-image:
-    radial-gradient(60rem 40rem at 75% -10%, rgba(109, 77, 255, 0.18), transparent 60%),
-    radial-gradient(50rem 35rem at 0% 10%, rgba(31, 214, 176, 0.1), transparent 55%);
-  background-attachment: fixed;
-}
-
-:root {
-  --background: var(--color-ink-950);
-  --foreground: #e8eaf2;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  background-image:
-    radial-gradient(60rem 40rem at 75% -10%, rgba(109, 77, 255, 0.18), transparent 60%),
-    radial-gradient(50rem 35rem at 0% 10%, rgba(31, 214, 176, 0.1), transparent 55%);
+    radial-gradient(60rem 42rem at 80% -12%, rgba(34, 197, 94, 0.22), transparent 60%),
+    radial-gradient(55rem 40rem at 0% 8%, rgba(245, 158, 11, 0.16), transparent 55%),
+    radial-gradient(40rem 30rem at 50% 120%, rgba(34, 197, 94, 0.1), transparent 60%);
   background-attachment: fixed;
 }
 
@@ -60,16 +45,16 @@ body {
 }
 
 ::selection {
-  background: rgba(109, 77, 255, 0.35);
+  background: rgba(245, 158, 11, 0.35);
 }
 
 .glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.06), rgba(245, 158, 11, 0.03));
   backdrop-filter: blur(8px);
 }
 
 .gradient-text {
-  background: linear-gradient(100deg, #fff 0%, #b9a7ff 45%, #6ee7d6 100%);
+  background: linear-gradient(100deg, #fff 0%, #86efac 45%, #fcd34d 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -82,5 +67,27 @@ body {
 .card-hover:hover {
   transform: translateY(-3px);
   border-color: var(--color-brand-500);
-  box-shadow: 0 18px 40px -24px rgba(109, 77, 255, 0.65);
+  box-shadow: 0 18px 40px -24px rgba(34, 197, 94, 0.65);
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.live-dot {
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+.spin-slow {
+  animation: spin-slow 2.4s linear infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }

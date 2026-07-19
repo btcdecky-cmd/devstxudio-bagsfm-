@@ -137,7 +137,7 @@ export const projects: Project[] = [
     followers: 860,
     ownerId: "b1",
     updatedAt: "2026-07-17T10:00:00Z",
-    accent: "from-violet-500 to-fuchsia-500",
+    accent: "from-green-500 to-emerald-500",
     updates: [
       u("p1u3", "Live collaboration MVP", "Shipped cursor presence and shared editing for up to 5 collaborators. CRDT merge is rock solid under load.", "feature", "2026-07-17T10:00:00Z", 142, 23),
       u("p1u2", "Cross-device sync", "End-to-end encrypted sync now works across macOS, Windows, and Linux with sub-second latency.", "milestone", "2026-07-09T10:00:00Z", 210, 41),
@@ -159,7 +159,7 @@ export const projects: Project[] = [
     followers: 540,
     ownerId: "b3",
     updatedAt: "2026-07-15T10:00:00Z",
-    accent: "from-emerald-500 to-teal-500",
+    accent: "from-emerald-500 to-green-600",
     updates: [
       u("p2u2", "Plugin system", "Forge now supports community plugins. Three plugins already published in the registry.", "feature", "2026-07-15T10:00:00Z", 88, 12),
       u("p2u1", "Database adapters", "Added Postgres, SQLite, and Turso adapters with generated migrations.", "milestone", "2026-07-02T10:00:00Z", 156, 29),
@@ -180,7 +180,7 @@ export const projects: Project[] = [
     followers: 290,
     ownerId: "b4",
     updatedAt: "2026-07-12T10:00:00Z",
-    accent: "from-amber-500 to-orange-500",
+    accent: "from-amber-500 to-yellow-500",
     updates: [
       u("p3u1", "Core renderer", "First triangle on screen! Sprite batching and a scene graph are next.", "note", "2026-07-12T10:00:00Z", 47, 8),
     ],
@@ -200,7 +200,7 @@ export const projects: Project[] = [
     followers: 1430,
     ownerId: "b5",
     updatedAt: "2026-07-18T10:00:00Z",
-    accent: "from-sky-500 to-indigo-500",
+    accent: "from-lime-500 to-green-500",
     updates: [
       u("p4u3", "v1.0 is live", "Signal Lens is officially out of beta. Thank you to every builder who tested it.", "launch", "2026-07-18T10:00:00Z", 502, 97),
       u("p4u2", "Drift alerts", "Real-time drift detection with Slack and webhook notifications.", "feature", "2026-07-10T10:00:00Z", 133, 18),
@@ -222,7 +222,7 @@ export const projects: Project[] = [
     followers: 910,
     ownerId: "b2",
     updatedAt: "2026-07-16T10:00:00Z",
-    accent: "from-pink-500 to-rose-500",
+    accent: "from-yellow-400 to-amber-500",
     updates: [
       u("p5u2", "Dark mode tokens", "Shipped a token system with automatic dark mode and per-component theming.", "feature", "2026-07-16T10:00:00Z", 119, 15),
       u("p5u1", "Keyboard nav", "Full keyboard navigation and screen-reader support across all 18 components.", "milestone", "2026-07-04T10:00:00Z", 174, 26),
@@ -243,7 +243,7 @@ export const projects: Project[] = [
     followers: 380,
     ownerId: "b6",
     updatedAt: "2026-07-14T10:00:00Z",
-    accent: "from-teal-500 to-cyan-500",
+    accent: "from-green-500 to-lime-500",
     updates: [
       u("p6u2", "Email sync", "Two-way email sync with Gmail and Outlook, threaded inside each contact.", "feature", "2026-07-14T10:00:00Z", 63, 9),
       u("p6u1", "Pipeline board", "Drag-and-drop deal pipeline with custom stages.", "milestone", "2026-07-01T10:00:00Z", 91, 14),
@@ -296,6 +296,83 @@ export function formatDate(iso: string): string {
   });
 }
 
+export function timeAgo(date: Date): string {
+  const secs = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+  if (secs < 60) return `${secs}s ago`;
+  const mins = Math.floor(secs / 60);
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
+/* ------------------------------------------------------------------ */
+/* Live Build Feed (real-time streaming of build events)              */
+/* ------------------------------------------------------------------ */
+
+export type FeedEventKind =
+  | "deploy"
+  | "commit"
+  | "star"
+  | "launch"
+  | "update"
+  | "match"
+  | "agent"
+  | "ipo";
+
+export type FeedEvent = {
+  id: string;
+  kind: FeedEventKind;
+  actor: string; // builder handle
+  project: string;
+  message: string;
+  at: Date;
+};
+
+export const feedKinds: Record<FeedEventKind, { label: string; color: string; icon: string }> = {
+  deploy: { label: "Deploy", color: "text-brand-400 bg-brand-500/15 ring-brand-400/30", icon: "▲" },
+  commit: { label: "Commit", color: "text-gold-400 bg-gold-500/15 ring-gold-400/30", icon: "◆" },
+  star: { label: "Star", color: "text-brand-400 bg-brand-500/15 ring-brand-400/30", icon: "★" },
+  launch: { label: "Launch", color: "text-accent-400 bg-accent-500/15 ring-accent-400/30", icon: "🚀" },
+  update: { label: "Update", color: "text-gold-400 bg-gold-500/15 ring-gold-400/30", icon: "✦" },
+  match: { label: "Match", color: "text-brand-400 bg-brand-500/15 ring-brand-400/30", icon: "♠" },
+  agent: { label: "Agent", color: "text-gold-400 bg-gold-500/15 ring-gold-400/30", icon: "🤖" },
+  ipo: { label: "IPO", color: "text-accent-400 bg-accent-500/15 ring-accent-400/30", icon: "⬡" },
+};
+
+const seedEvents: Omit<FeedEvent, "at">[] = [
+  { id: "e1", kind: "deploy", actor: "mayabuilds", project: "Orbit Notes", message: "Deployed v0.9.2 to production" },
+  { id: "e2", kind: "match", actor: "leohacks", project: "BluffNet", message: "Won HU ladder match +214 BB" },
+  { id: "e3", kind: "commit", actor: "aishacodes", project: "Forge CLI", message: "Pushed plugin registry support" },
+  { id: "e4", kind: "launch", actor: "priyadev", project: "Signal Lens", message: "v1.0 is live 🎉" },
+  { id: "e5", kind: "star", actor: "jonasb", project: "Cabin CRM", message: "Reached 540 stars" },
+  { id: "e6", kind: "agent", actor: "aishacodes", project: "DeepStack-X", message: "Self-trained 10k new hands" },
+  { id: "e7", kind: "ipo", actor: "mayabuilds", project: "Nebula Labs", message: "IPO raised $420k at TGE" },
+  { id: "e8", kind: "update", actor: "leohacks", project: "Nimbus UI", message: "Shipped dark mode tokens" },
+];
+
+export const seedFeed: FeedEvent[] = seedEvents.map((e, i) => ({
+  ...e,
+  at: new Date(Date.now() - (i + 1) * 47_000),
+}));
+
+const liveTemplates: Omit<FeedEvent, "id" | "at">[] = [
+  { kind: "commit", actor: "priyadev", project: "Signal Lens", message: "Streaming drift alerts to prod" },
+  { kind: "match", actor: "leohacks", project: "BluffNet", message: "Climbed to #3 on the ladder" },
+  { kind: "deploy", actor: "mayabuilds", project: "Orbit Notes", message: "Rolled out live collaboration" },
+  { kind: "star", actor: "jonasb", project: "Cabin CRM", message: "Gained 12 new stars" },
+  { kind: "agent", actor: "aishacodes", project: "DeepStack-X", message: "Logged 1,200 decision traces" },
+  { kind: "update", actor: "tomasr", project: "Pixel Forge", message: "Added sprite batching" },
+  { kind: "ipo", actor: "priyadev", project: "SignalStack", message: "Vesting schedule published" },
+  { kind: "launch", actor: "mayabuilds", project: "MemeForge", message: "Generated & published in 38s" },
+];
+
+let liveCounter = 1000;
+export function nextLiveEvent(): FeedEvent {
+  const t = liveTemplates[Math.floor(Math.random() * liveTemplates.length)];
+  return { ...t, id: `live-${liveCounter++}`, at: new Date() };
+}
+
 /* ------------------------------------------------------------------ */
 /* AI Agent Arena (poker focus)                                        */
 /* ------------------------------------------------------------------ */
@@ -338,12 +415,12 @@ export const arenaFormats: {
 ];
 
 export const arenaAgents: AgentEntry[] = [
-  { id: "a1", name: "DeepStack-X", builderId: "b3", format: "6-max", handsPlayed: 184200, winRate: 14.2, rank: 1, rating: 2140, prizeWon: 12840, accent: "from-sky-500 to-indigo-500" },
-  { id: "a2", name: "MonadGrinder", builderId: "b5", format: "6-max", handsPlayed: 161900, winRate: 12.8, rank: 2, rating: 2095, prizeWon: 9670, accent: "from-emerald-500 to-teal-500" },
-  { id: "a3", name: "BluffNet", builderId: "b2", format: "heads-up", handsPlayed: 94200, winRate: 18.6, rank: 3, rating: 2051, prizeWon: 8120, accent: "from-pink-500 to-rose-500" },
-  { id: "a4", name: "PotOdds-Pro", builderId: "b4", format: "6-max", handsPlayed: 133400, winRate: 9.4, rank: 4, rating: 1988, prizeWon: 5340, accent: "from-amber-500 to-orange-500" },
-  { id: "a5", name: "HoleCard-HL", builderId: "b1", format: "heads-up", handsPlayed: 71500, winRate: 11.1, rank: 5, rating: 1910, prizeWon: 4200, accent: "from-violet-500 to-fuchsia-500" },
-  { id: "a6", name: "AllIn-AI", builderId: "b6", format: "tournament", handsPlayed: 58800, winRate: 7.7, rank: 6, rating: 1844, prizeWon: 3110, accent: "from-teal-500 to-cyan-500" },
+  { id: "a1", name: "DeepStack-X", builderId: "b3", format: "6-max", handsPlayed: 184200, winRate: 14.2, rank: 1, rating: 2140, prizeWon: 12840, accent: "from-lime-500 to-green-500" },
+  { id: "a2", name: "MonadGrinder", builderId: "b5", format: "6-max", handsPlayed: 161900, winRate: 12.8, rank: 2, rating: 2095, prizeWon: 9670, accent: "from-emerald-500 to-green-600" },
+  { id: "a3", name: "BluffNet", builderId: "b2", format: "heads-up", handsPlayed: 94200, winRate: 18.6, rank: 3, rating: 2051, prizeWon: 8120, accent: "from-yellow-400 to-amber-500" },
+  { id: "a4", name: "PotOdds-Pro", builderId: "b4", format: "6-max", handsPlayed: 133400, winRate: 9.4, rank: 4, rating: 1988, prizeWon: 5340, accent: "from-amber-500 to-yellow-500" },
+  { id: "a5", name: "HoleCard-HL", builderId: "b1", format: "heads-up", handsPlayed: 71500, winRate: 11.1, rank: 5, rating: 1910, prizeWon: 4200, accent: "from-green-500 to-emerald-500" },
+  { id: "a6", name: "AllIn-AI", builderId: "b6", format: "tournament", handsPlayed: 58800, winRate: 7.7, rank: 6, rating: 1844, prizeWon: 3110, accent: "from-green-500 to-lime-500" },
 ];
 
 export const arenaMatches: ArenaMatch[] = [
@@ -368,11 +445,11 @@ export type AppTemplate = {
 };
 
 export const appTemplates: AppTemplate[] = [
-  { id: "t1", prompt: "A meme generator for my coin", name: "MemeForge", category: "Social", linkedToken: "$MEME", buildSeconds: 38, accent: "from-pink-500 to-rose-500" },
-  { id: "t2", prompt: "A trading dashboard with live charts", name: "ChartDeck", category: "DeFi", linkedToken: "$DECK", buildSeconds: 52, accent: "from-sky-500 to-indigo-500" },
-  { id: "t3", prompt: "An on-chain tipping game", name: "TipArcade", category: "Game", linkedToken: "$TIP", buildSeconds: 44, accent: "from-emerald-500 to-teal-500" },
-  { id: "t4", prompt: "A community airdrop claim page", name: "ClaimDrop", category: "Community", linkedToken: "$DROP", buildSeconds: 29, accent: "from-amber-500 to-orange-500" },
-  { id: "t5", prompt: "A token-gated content vault", name: "GateVault", category: "Tooling", linkedToken: "$VAULT", buildSeconds: 47, accent: "from-violet-500 to-fuchsia-500" },
+  { id: "t1", prompt: "A meme generator for my coin", name: "MemeForge", category: "Social", linkedToken: "$MEME", buildSeconds: 38, accent: "from-yellow-400 to-amber-500" },
+  { id: "t2", prompt: "A trading dashboard with live charts", name: "ChartDeck", category: "DeFi", linkedToken: "$DECK", buildSeconds: 52, accent: "from-lime-500 to-green-500" },
+  { id: "t3", prompt: "An on-chain tipping game", name: "TipArcade", category: "Game", linkedToken: "$TIP", buildSeconds: 44, accent: "from-emerald-500 to-green-600" },
+  { id: "t4", prompt: "A community airdrop claim page", name: "ClaimDrop", category: "Community", linkedToken: "$DROP", buildSeconds: 29, accent: "from-amber-500 to-yellow-500" },
+  { id: "t5", prompt: "A token-gated content vault", name: "GateVault", category: "Tooling", linkedToken: "$VAULT", buildSeconds: 47, accent: "from-green-500 to-emerald-500" },
 ];
 
 export const appBuilderFeatures = [
@@ -402,10 +479,10 @@ export type IncubatorProject = {
 };
 
 export const incubatorProjects: IncubatorProject[] = [
-  { id: "i1", name: "Nebula Labs", coin: "$NEB", tagline: "Consumer app suite bundled under one tradable coin", apps: 4, raised: 420000, status: "live", vesting: "12% TGE / 6mo linear", builderId: "b1", accent: "from-violet-500 to-fuchsia-500" },
-  { id: "i2", name: "BlockForge", coin: "$FORGE", tagline: "Incubator-backed builder tooling ecosystem", apps: 3, raised: 180000, status: "ipo", vesting: "15% TGE / 9mo linear", builderId: "b3", accent: "from-emerald-500 to-teal-500" },
-  { id: "i3", name: "PixelUnion", coin: "$PXU", tagline: "On-chain games + social apps for one community", apps: 5, raised: 0, status: "incubating", vesting: "TBD", builderId: "b4", accent: "from-amber-500 to-orange-500" },
-  { id: "i4", name: "SignalStack", coin: "$SIG", tagline: "ML tooling wrapped as a tradable asset", apps: 2, raised: 260000, status: "ipo", vesting: "10% TGE / 12mo linear", builderId: "b5", accent: "from-sky-500 to-indigo-500" },
+  { id: "i1", name: "Nebula Labs", coin: "$NEB", tagline: "Consumer app suite bundled under one tradable coin", apps: 4, raised: 420000, status: "live", vesting: "12% TGE / 6mo linear", builderId: "b1", accent: "from-green-500 to-emerald-500" },
+  { id: "i2", name: "BlockForge", coin: "$FORGE", tagline: "Incubator-backed builder tooling ecosystem", apps: 3, raised: 180000, status: "ipo", vesting: "15% TGE / 9mo linear", builderId: "b3", accent: "from-emerald-500 to-green-600" },
+  { id: "i3", name: "PixelUnion", coin: "$PXU", tagline: "On-chain games + social apps for one community", apps: 5, raised: 0, status: "incubating", vesting: "TBD", builderId: "b4", accent: "from-amber-500 to-yellow-500" },
+  { id: "i4", name: "SignalStack", coin: "$SIG", tagline: "ML tooling wrapped as a tradable asset", apps: 2, raised: 260000, status: "ipo", vesting: "10% TGE / 12mo linear", builderId: "b5", accent: "from-lime-500 to-green-500" },
 ];
 
 export const incubatorSteps = [
