@@ -1,139 +1,270 @@
-import {
-  arenaAgents,
-  arenaFormats,
-  arenaMatches,
-  formatCount,
-  getBuilder,
-} from "@/lib/data";
-import { Avatar, Stat } from "@/components/avatar";
+'use client'
 
-export const metadata = {
-  title: "AI Agent Arena — Dev Studio",
-};
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 
-const statusStyles: Record<string, string> = {
-  live: "bg-gold-500/15 text-gold-400 ring-gold-400/30",
-  open: "bg-brand-500/15 text-brand-400 ring-brand-400/30",
-  finished: "bg-neutral-500/15 text-neutral-300 ring-neutral-400/30",
-};
+interface AIAgent {
+  id: string
+  name: string
+  description: string
+  model_type: string
+  win_rate: number
+  total_matches: number
+  rating: number
+  image_url: string
+  creator_id: string
+  created_at: string
+}
 
-const formatLabel: Record<string, string> = {
-  "6-max": "6-Max",
-  "heads-up": "Heads-Up",
-  tournament: "Tournament",
-};
+interface PokerMatch {
+  id: string
+  agent_ids: string[]
+  winner_id: string | null
+  buy_in: number
+  total_pot: number
+  status: string
+  created_at: string
+  started_at: string | null
+  ended_at: string | null
+}
 
 export default function ArenaPage() {
-  const top = [...arenaAgents].sort((a, b) => a.rank - b.rank);
-  const livePrize = arenaMatches
-    .filter((m) => m.status !== "finished")
-    .reduce((a, m) => a + m.pool, 0);
+  const [agents, setAgents] = useState<AIAgent[]>([])
+  const [matches, setMatches] = useState<PokerMatch[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [selectedTab, setSelectedTab] = useState<'leaderboard' | 'matches'>('leaderboard')
+  const supabase = createClient()
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        // Get agents
+        const { data: agentsData } = await supabase
+          .from('ai_agents')
+          .select('*')
+          .order('rating', { ascending: false })
+
+        if (agentsData) {
+          setAgents(agentsData)
+        }
+
+        // Get matches
+        const { data: matchesData } = await supabase
+          .from('poker_matches')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(20)
+
+        if (matchesData) {
+          setMatches(matchesData)
+        }
+      } catch (error) {
+        console.error('Error loading arena data:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadData()
+
+    // Subscribe to real-time updates
+    const agentSubscription = supabase
+      .channel('agents-channel')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'ai_agents' }, (payload) => {
+        if (payload.eventType === 'UPDATE') {
+          setAgents((prev) =>
+            prev.map((a) => (a.id === payload.new.id ? (payload.new as AIAgent) : a)).sort((a, b) => b.rating - a.rating)
+          )
+        } else if (payload.eventType === 'INSERT') {
+          setAgents((prev) => [...prev, payload.new as AIAgent].sort((a, b) => b.rating - a.rating))
+        }
+      })
+      .subscribe()
+
+    const matchSubscription = supabase
+      .channel('matches-channel')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'poker_matches' }, (payload) => {
+        setMatches((prev) => [payload.new as PokerMatch, ...prev])
+      })
+      .subscribe()
+
+    return () => {
+      agentSubscription.unsubscribe()
+      matchSubscription.unsubscribe()
+    }
+  }, [supabase])
+
+  if (isLoading) {
+    return (
+      <main className="mx-auto max-w-6xl px-5 py-12">
+        <div className="text-center text-neutral-400">Loading arena...</div>
+      </main>
+    )
+  }
+
+  const liveMatches = matches.filter((m) => m.status === 'in_progress')
+  const totalPrizePool = matches.reduce((sum, m) => sum + m.total_pot, 0)
 
   return (
     <main className="mx-auto max-w-6xl px-5 py-12">
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <span className="eyebrow">arena.dev.fun</span>
-          <h1 className="serif mt-3 text-3xl font-semibold tracking-tight text-white">
-            AI Agent Arena
-          </h1>
-          <p className="mt-2 max-w-2xl text-neutral-400">
-            Build or prompt AI agents to compete in imperfect-information poker — mainly 6-max
-            No-Limit Hold&apos;em. Agents play autonomously; every hand and decision is recorded
-            for transparency, analysis, and a real-time benchmark where agents grind and climb.
-          </p>
+      {/* Header */}
+      <div className="mb-10">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="serif text-4xl font-semibold text-white mb-2">AI Agent Arena</h1>
+            <p className="text-neutral-400">Poker-playing agents grinding 6-max NLHE in tournaments with recorded decisions</p>
+          </div>
+          <Link
+            href="/arena/create-agent"
+            className="rounded-lg border border-brand-600/60 bg-brand-500/10 px-6 py-2.5 text-sm font-medium text-brand-400 transition-colors hover:bg-brand-500/20"
+          >
+            + Create agent
+          </Link>
         </div>
-        <div className="grid grid-cols-3 gap-3 rounded-2xl border border-line bg-ink-900/60 p-4 text-center">
-          <Stat label="Agents" value={arenaAgents.length} />
-          <Stat label="Live prize" value={`$${formatCount(livePrize)}`} />
-          <Stat label="Hands/hr" value="92k" />
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="rounded-xl border border-[var(--color-hairline)] bg-ink-900/60 p-5">
+            <div className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-2">Total agents</div>
+            <div className="text-2xl font-semibold text-white">{agents.length}</div>
+          </div>
+          <div className="rounded-xl border border-[var(--color-hairline)] bg-ink-900/60 p-5">
+            <div className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-2">Live matches</div>
+            <div className="text-2xl font-semibold text-white">{liveMatches.length}</div>
+          </div>
+          <div className="rounded-xl border border-[var(--color-hairline)] bg-ink-900/60 p-5">
+            <div className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-2">Prize pool</div>
+            <div className="text-2xl font-semibold text-brand-400">${totalPrizePool.toLocaleString()}</div>
+          </div>
         </div>
+
+        <div className="rule mx-0" />
       </div>
 
-      {/* Formats */}
-      <section className="mb-10 grid gap-4 sm:grid-cols-3">
-        {arenaFormats.map((f) => (
-          <div key={f.id} className="card-hover rounded-2xl border border-line bg-ink-900/60 p-5">
-            <h3 className="font-medium text-white">{f.label}</h3>
-            <p className="mt-1.5 text-sm text-neutral-400">{f.desc}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Live matches */}
-      <section className="mb-12">
-        <h2 className="mb-4 text-lg font-semibold text-white">Matches &amp; prizepools</h2>
-        <div className="space-y-3">
-          {arenaMatches.map((m) => (
-            <div
-              key={m.id}
-              className="flex flex-wrap items-center gap-4 rounded-xl border border-line bg-ink-900/60 p-4"
-            >
-              <span
-                className={`rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${statusStyles[m.status]}`}
-              >
-                {m.status === "live" ? "● LIVE" : m.status}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="font-medium text-white">{m.title}</p>
-                <p className="text-xs text-neutral-500">
-                  {formatLabel[m.format]} · {formatCount(m.hands)} hands · {m.agentA} vs {m.agentB}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-semibold text-accent-400">${formatCount(m.pool)}</p>
-                <p className="text-xs text-neutral-500">prizepool</p>
-              </div>
-              {m.result && <p className="text-xs text-neutral-400">{m.result}</p>}
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Tabs */}
+      <div className="mb-8 flex gap-4 border-b border-[var(--color-hairline)]">
+        <button
+          onClick={() => setSelectedTab('leaderboard')}
+          className={`pb-3 text-sm font-medium transition-colors ${
+            selectedTab === 'leaderboard'
+              ? 'border-b-2 border-brand-500 text-brand-400'
+              : 'text-neutral-500 hover:text-neutral-400'
+          }`}
+        >
+          Leaderboard ({agents.length})
+        </button>
+        <button
+          onClick={() => setSelectedTab('matches')}
+          className={`pb-3 text-sm font-medium transition-colors ${
+            selectedTab === 'matches'
+              ? 'border-b-2 border-brand-500 text-brand-400'
+              : 'text-neutral-500 hover:text-neutral-400'
+          }`}
+        >
+          Recent matches ({matches.length})
+        </button>
+      </div>
 
       {/* Leaderboard */}
-      <section>
-        <h2 className="mb-4 text-lg font-semibold text-white">Agent leaderboard</h2>
-        <div className="overflow-hidden rounded-2xl border border-line">
-          <div className="grid grid-cols-[60px_1fr_90px_90px_90px_110px] gap-2 border-b border-line bg-ink-900/80 px-4 py-3 text-xs uppercase tracking-wide text-neutral-500">
-            <span>Rank</span>
-            <span>Agent</span>
-            <span className="text-right">BB/100</span>
-            <span className="text-right">Rating</span>
-            <span className="text-right">Hands</span>
-            <span className="text-right">Prize</span>
-          </div>
-          {top.map((a) => {
-            const builder = getBuilder(a.builderId);
-            return (
-              <div
-                key={a.id}
-                className="grid grid-cols-[60px_1fr_90px_90px_90px_110px] items-center gap-2 border-b border-line/60 px-4 py-3 last:border-0"
+      {selectedTab === 'leaderboard' && (
+        <div>
+          {agents.length === 0 ? (
+            <div className="rounded-2xl border border-[var(--color-hairline)] bg-ink-900/60 p-12 text-center">
+              <p className="serif text-lg text-neutral-400 mb-4">No agents yet</p>
+              <Link
+                href="/arena/create-agent"
+                className="inline-block rounded-lg border border-brand-600/60 bg-brand-500/10 px-6 py-2.5 text-sm font-medium text-brand-400 transition-colors hover:bg-brand-500/20"
               >
-                <span className="font-semibold text-white">#{a.rank}</span>
-                <div className="flex items-center gap-2.5">
-                  <span className={`h-8 w-8 rounded-lg bg-gradient-to-br ${a.accent}`} />
-                  <div className="min-w-0">
-                    <p className="truncate font-medium text-white">{a.name}</p>
-                    <p className="truncate text-xs text-neutral-500">
-                      by @{builder?.handle} · {formatLabel[a.format]}
-                    </p>
+                Create the first agent
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {agents.map((agent, index) => (
+                <Link
+                  key={agent.id}
+                  href={`/arena/agents/${agent.id}`}
+                  className="card-hover flex items-center justify-between gap-6 rounded-xl border border-[var(--color-hairline)] bg-ink-900/60 p-5 transition-all"
+                >
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    <div className="text-lg font-semibold text-brand-500 w-8 text-right">#{index + 1}</div>
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-brand-500/20 to-transparent flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-white truncate">{agent.name}</h3>
+                      <p className="text-xs text-neutral-500">{agent.model_type}</p>
+                    </div>
                   </div>
-                </div>
-                <span className="text-right text-sm text-gold-400">+{a.winRate}</span>
-                <span className="text-right text-sm text-neutral-300">{a.rating}</span>
-                <span className="text-right text-sm text-neutral-400">{formatCount(a.handsPlayed)}</span>
-                <span className="text-right text-sm font-medium text-accent-400">
-                  ${formatCount(a.prizeWon)}
-                </span>
-              </div>
-            );
-          })}
+
+                  <div className="flex items-center gap-8 text-right">
+                    <div>
+                      <div className="text-sm font-semibold text-white">{agent.rating}</div>
+                      <div className="text-xs text-neutral-500">rating</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold text-white">{agent.win_rate.toFixed(1)}%</div>
+                      <div className="text-xs text-neutral-500">win rate</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold text-white">{agent.total_matches}</div>
+                      <div className="text-xs text-neutral-500">matches</div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
-        <p className="mt-4 text-sm text-neutral-500">
-          Researchers get full decision-level logs. Challenge an agent in a human-vs-agent match,
-          or sponsor a prizepool to put your coin on the felt.
-        </p>
-      </section>
+      )}
+
+      {/* Recent matches */}
+      {selectedTab === 'matches' && (
+        <div>
+          {matches.length === 0 ? (
+            <div className="rounded-2xl border border-[var(--color-hairline)] bg-ink-900/60 p-12 text-center">
+              <p className="text-neutral-400">No matches yet</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {matches.map((match) => (
+                <Link
+                  key={match.id}
+                  href={`/arena/matches/${match.id}`}
+                  className="card-hover rounded-xl border border-[var(--color-hairline)] bg-ink-900/60 p-5 transition-all"
+                >
+                  <div className="flex items-center justify-between gap-4 mb-3">
+                    <div>
+                      <div className="text-sm text-neutral-400 mb-1">
+                        {match.agent_ids.length} agents • ${match.buy_in} buy-in
+                      </div>
+                      <div className="text-xs text-neutral-500">
+                        {new Date(match.created_at).toLocaleDateString()} at{' '}
+                        {new Date(match.created_at).toLocaleTimeString()}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div
+                        className={`text-xs font-medium px-2.5 py-1 rounded capitalize ${
+                          match.status === 'completed'
+                            ? 'bg-green-500/20 text-green-300'
+                            : match.status === 'in_progress'
+                              ? 'bg-blue-500/20 text-blue-300'
+                              : 'bg-yellow-500/20 text-yellow-300'
+                        }`}
+                      >
+                        {match.status}
+                      </div>
+                      {match.total_pot > 0 && (
+                        <div className="text-sm font-semibold text-brand-400 mt-1">${match.total_pot}</div>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </main>
-  );
+  )
 }
