@@ -1,29 +1,104 @@
-import Link from "next/link";
+import Link from 'next/link';
+import { SITE_NAME } from '@/lib/constants';
 
 export function SiteFooter() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="border-t border-[var(--color-hairline)]">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-2.5">
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-brand-500 text-sm">
-            💰
-          </span>
-          <span className="serif text-base font-semibold text-white">Dev Studio</span>
-          <span className="text-sm text-neutral-500">— for those who build in the open</span>
+    <footer className="border-t border-neutral-800 bg-ink-900/50 py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-gold to-gold-light flex items-center justify-center">
+                <span className="text-xs font-bold text-ink-900">DS</span>
+              </div>
+              <span className="font-serif text-lg font-bold text-gold">{SITE_NAME}</span>
+            </div>
+            <p className="text-sm text-neutral-400">
+              Build in public. Create projects, share updates, and track development progress.
+            </p>
+          </div>
+
+          {/* Product */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold text-gold">Product</h3>
+            <ul className="space-y-2 text-sm text-neutral-400">
+              <li>
+                <Link href="/projects" className="hover:text-gold transition-colors">
+                  Projects
+                </Link>
+              </li>
+              <li>
+                <Link href="/builders" className="hover:text-gold transition-colors">
+                  Builders
+                </Link>
+              </li>
+              <li>
+                <Link href="/arena" className="hover:text-gold transition-colors">
+                  Arena
+                </Link>
+              </li>
+              <li>
+                <Link href="/builder" className="hover:text-gold transition-colors">
+                  AI Builder
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Community */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold text-gold">Community</h3>
+            <ul className="space-y-2 text-sm text-neutral-400">
+              <li>
+                <a href="https://twitter.com" className="hover:text-gold transition-colors">
+                  Twitter
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com" className="hover:text-gold transition-colors">
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a href="https://discord.com" className="hover:text-gold transition-colors">
+                  Discord
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold text-gold">Legal</h3>
+            <ul className="space-y-2 text-sm text-neutral-400">
+              <li>
+                <Link href="#" className="hover:text-gold transition-colors">
+                  Privacy
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:text-gold transition-colors">
+                  Terms
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="hover:text-gold transition-colors">
+                  Status
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-neutral-400">
-          <Link href="/projects" className="hover:text-brand-400">
-            Explore
-          </Link>
-          <Link href="/builders" className="hover:text-brand-400">
-            Builders
-          </Link>
-          <Link href="/dashboard" className="hover:text-brand-400">
-            Studio
-          </Link>
-          <span className="text-neutral-600">© {new Date().getFullYear()}</span>
-        </nav>
+        {/* Bottom */}
+        <div className="rule mt-8 pt-8">
+          <p className="text-center text-sm text-neutral-500">
+            © {currentYear} {SITE_NAME}. Built in public by the community.
+          </p>
+        </div>
       </div>
     </footer>
   );

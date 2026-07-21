@@ -1,62 +1,81 @@
-import Link from "next/link";
-import type { Project } from "@/lib/data";
-import { formatCount, getBuilder } from "@/lib/data";
-import { StatusBadge } from "@/components/status-badge";
+'use client';
 
-export function ProjectCard({ project }: { project: Project }) {
-  const owner = getBuilder(project.ownerId);
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { ROUTES } from '@/lib/constants';
+import { getRelativeTime } from '@/lib/utils';
+import type { Project } from '@/lib/types';
+import { Badge } from './ui/badge';
+
+interface ProjectCardProps {
+  project: Project;
+}
+
+const statusMap: Record<string, 'idea' | 'building' | 'beta' | 'launched' | 'ipo'> = {
+  idea: 'idea',
+  building: 'building',
+  beta: 'beta',
+  launched: 'launched',
+  ipo: 'ipo',
+};
+
+export function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <Link
-      href={`/projects/${project.slug}`}
-      className="card-hover group flex flex-col overflow-hidden rounded-2xl border border-line bg-ink-900/60"
-    >
-      <div className={`relative h-24 bg-gradient-to-br ${project.accent}`}>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.25),transparent_50%)]" />
-        <div className="absolute right-3 top-3">
-          <StatusBadge status={project.status} />
-        </div>
-      </div>
-
-      <div className="flex flex-1 flex-col gap-3 p-5">
-        <div>
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold tracking-tight text-white group-hover:text-brand-400">
-              {project.name}
-            </h3>
-            <span className="text-xs text-neutral-500">{project.category}</span>
-          </div>
-          <p className="mt-1 text-sm leading-relaxed text-neutral-400">
-            {project.tagline}
-          </p>
-        </div>
-
-        <div className="mt-auto">
-          <div className="mb-1.5 flex items-center justify-between text-xs text-neutral-500">
-            <span>Progress</span>
-            <span>{project.progress}%</span>
-          </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-ink-700">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-brand-500 to-accent-500"
-              style={{ width: `${project.progress}%` }}
+    <Link href={ROUTES.PROJECT_DETAIL(project.slug)}>
+      <div className="glass group card-hover overflow-hidden">
+        {/* Header */}
+        <div className="aspect-video overflow-hidden bg-gradient-to-br from-ink-800 to-ink-900">
+          {project.cover_image_url ? (
+            <img
+              src={project.cover_image_url}
+              alt={project.name}
+              className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
-          </div>
+          ) : (
+            <div className="flex h-full items-center justify-center">
+              <div className="text-center">
+                {project.logo_url && (
+                  <img
+                    src={project.logo_url}
+                    alt={project.name}
+                    className="mb-4 h-12 w-12 mx-auto rounded-lg"
+                  />
+                )}
+                <p className="text-sm text-neutral-500">No cover image</p>
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="flex items-center justify-between border-t border-line pt-3">
-          <div className="flex items-center gap-2">
-            {owner && (
-              <>
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-[10px] font-semibold text-white">
-                  {owner.avatar}
-                </span>
-                <span className="text-xs text-neutral-400">@{owner.handle}</span>
-              </>
-            )}
+        {/* Content */}
+        <div className="p-4">
+          {/* Status */}
+          <div className="mb-3 flex items-center justify-between">
+            <Badge variant={statusMap[project.status] || 'default'}>
+              {project.status}
+            </Badge>
+            <span className="text-xs text-neutral-500">
+              {getRelativeTime(project.created_at)}
+            </span>
           </div>
-          <div className="flex items-center gap-3 text-xs text-neutral-500">
-            <span>★ {formatCount(project.stars)}</span>
-            <span>◆ {formatCount(project.followers)}</span>
+
+          {/* Title */}
+          <h3 className="mb-2 font-serif text-lg font-semibold text-gold group-hover:text-gold-light transition-colors">
+            {project.name}
+          </h3>
+
+          {/* Description */}
+          <p className="mb-4 text-sm text-neutral-400 line-clamp-2">
+            {project.description}
+          </p>
+
+          {/* Footer */}
+          <div className="flex items-center justify-between pt-4 border-t border-neutral-700">
+            <div className="flex items-center space-x-4 text-xs text-neutral-500">
+              <span>{project.views_count} views</span>
+              <span>{project.followers_count} followers</span>
+            </div>
+            <ArrowRight className="h-4 w-4 text-gold group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
       </div>

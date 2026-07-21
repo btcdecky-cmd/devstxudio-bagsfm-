@@ -1,61 +1,89 @@
-import Link from "next/link";
-import { currentUser, formatCount } from "@/lib/data";
+'use client';
 
-const links = [
-  { href: "/live", label: "Live" },
-  { href: "/projects", label: "Explore" },
-  { href: "/arena", label: "Agent Arena" },
-  { href: "/builder", label: "App Builder" },
-  { href: "/incubator", label: "Incubator" },
-  { href: "/builders", label: "Builders" },
-  { href: "/github", label: "GitHub Finder" },
-  { href: "/access", label: "Access" },
-  { href: "/dashboard", label: "Studio" },
+import { Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
+import { ROUTES, SITE_NAME } from '@/lib/constants';
+import { Button } from './ui/button';
+
+const navigation = [
+  { name: 'Projects', href: ROUTES.PROJECTS },
+  { name: 'Builders', href: ROUTES.BUILDERS },
+  { name: 'Arena', href: ROUTES.ARENA },
+  { name: 'Builder', href: ROUTES.BUILDER },
+  { name: 'Live', href: ROUTES.LIVE },
 ];
 
 export function SiteHeader() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--color-hairline)] glass">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <Link href="/" className="flex items-center gap-2.5">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-500 text-sm shadow-lg shadow-brand-500/40">
-            💰
-          </span>
-          <span className="serif text-lg font-semibold tracking-tight text-white">
-            Dev&nbsp;Studio
-          </span>
-          <span className="hidden border-l border-[var(--color-hairline)] pl-2.5 text-[0.65rem] uppercase tracking-[0.25em] text-brand-500 sm:block">
-            Est. Build
-          </span>
-        </Link>
+    <header className="sticky top-0 z-50 glass border-b border-neutral-800">
+      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
+          <Link href={ROUTES.HOME} className="flex items-center space-x-2">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-gold to-gold-light flex items-center justify-center">
+              <span className="text-xs font-bold text-ink-900">DS</span>
+            </div>
+            <span className="hidden font-serif text-lg font-bold text-gold sm:inline">
+              {SITE_NAME}
+            </span>
+          </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="rounded-md px-3 py-2 text-sm text-neutral-400 transition-colors hover:bg-white/5 hover:text-brand-400"
+          {/* Desktop Navigation */}
+          <div className="hidden space-x-1 md:flex">
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="px-3 py-2 text-sm font-medium text-neutral-300 hover:text-gold transition-colors"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+
+          {/* Right Section */}
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href={ROUTES.DASHBOARD}>Dashboard</Link>
+            </Button>
+            <Button size="sm" asChild>
+              <Link href={ROUTES.ACCESS}>Get Access</Link>
+            </Button>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
             >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <Link
-            href="/dashboard"
-            className="hidden text-sm text-neutral-400 hover:text-brand-400 sm:block"
-          >
-            @{currentUser.handle}
-          </Link>
-          <Link
-            href="/access"
-            className="rounded-lg border border-brand-600/60 bg-brand-500/10 px-3.5 py-2 text-sm font-medium text-brand-400 transition-colors hover:bg-brand-500/20"
-          >
-            Request access
-          </Link>
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6 text-gold" />
+              ) : (
+                <Menu className="h-6 w-6 text-gold" />
+              )}
+            </button>
+          </div>
         </div>
-      </div>
+
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <div className="space-y-1 pb-4 md:hidden">
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block px-3 py-2 text-sm font-medium text-neutral-300 hover:text-gold transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        )}
+      </nav>
     </header>
   );
 }

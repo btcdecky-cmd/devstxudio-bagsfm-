@@ -1,26 +1,32 @@
-import type { Project } from "@/lib/data";
+import { Badge, type BadgeProps } from './ui/badge';
 
-const statusStyles: Record<Project["status"], string> = {
-  idea: "bg-neutral-500/15 text-neutral-300 ring-neutral-400/30",
-  building: "bg-brand-500/15 text-brand-400 ring-brand-400/30",
-  beta: "bg-accent-500/15 text-accent-400 ring-accent-400/30",
-  launched: "bg-gold-500/15 text-gold-400 ring-gold-400/30",
+type ProjectStatus = 'idea' | 'building' | 'beta' | 'launched' | 'ipo';
+
+const statusConfig: Record<ProjectStatus, BadgeProps['variant']> = {
+  idea: 'idea',
+  building: 'building',
+  beta: 'beta',
+  launched: 'launched',
+  ipo: 'ipo',
 };
 
-const statusLabel: Record<Project["status"], string> = {
-  idea: "Idea",
-  building: "Building",
-  beta: "Beta",
-  launched: "Launched",
+const statusLabels: Record<ProjectStatus, string> = {
+  idea: '💡 Idea',
+  building: '🏗️ Building',
+  beta: '🧪 Beta',
+  launched: '🚀 Launched',
+  ipo: '📈 IPO',
 };
 
-export function StatusBadge({ status }: { status: Project["status"] }) {
+interface StatusBadgeProps {
+  status: ProjectStatus;
+  className?: string;
+}
+
+export function StatusBadge({ status, className }: StatusBadgeProps) {
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${statusStyles[status]}`}
-    >
-      <span className="h-1.5 w-1.5 rounded-full bg-current" />
-      {statusLabel[status]}
-    </span>
+    <Badge variant={statusConfig[status]} className={className}>
+      {statusLabels[status]}
+    </Badge>
   );
 }

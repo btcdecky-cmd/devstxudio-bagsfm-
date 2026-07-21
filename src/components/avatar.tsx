@@ -1,44 +1,51 @@
-import { formatCount } from "@/lib/data";
+import { cn } from '@/lib/utils';
 
-export function Avatar({
-  name,
-  initials,
-  size = "md",
-  accent,
-}: {
-  name: string;
-  initials: string;
-  size?: "sm" | "md" | "lg";
-  accent?: string;
-}) {
-  const sizes = {
-    sm: "h-8 w-8 text-xs",
-    md: "h-10 w-10 text-sm",
-    lg: "h-14 w-14 text-lg",
-  };
-  const bg = accent ?? "from-brand-500 to-accent-500";
+interface AvatarProps {
+  src?: string;
+  alt: string;
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+}
+
+const sizeMap = {
+  sm: 'h-8 w-8',
+  md: 'h-12 w-12',
+  lg: 'h-16 w-16',
+};
+
+export function Avatar({ src, alt, size = 'md', className }: AvatarProps) {
   return (
-    <span
-      title={name}
-      className={`grid shrink-0 place-items-center rounded-full bg-gradient-to-br ${bg} font-semibold text-white ${sizes[size]}`}
+    <div
+      className={cn(
+        'rounded-full overflow-hidden bg-gradient-to-br from-gold to-gold-light flex items-center justify-center',
+        sizeMap[size],
+        className,
+      )}
     >
-      {initials}
-    </span>
+      {src ? (
+        <img src={src} alt={alt} className="h-full w-full object-cover" />
+      ) : (
+        <span className="text-xs font-bold text-ink-900">
+          {alt
+            .split(' ')
+            .map((n) => n[0])
+            .join('')}
+        </span>
+      )}
+    </div>
   );
 }
 
-export function Stat({
-  label,
-  value,
-}: {
+interface StatProps {
   label: string;
   value: number | string;
-}) {
-  const display = typeof value === "number" ? formatCount(value) : value;
+}
+
+export function Stat({ label, value }: StatProps) {
   return (
-    <div className="flex flex-col">
-      <span className="text-sm font-semibold text-white">{display}</span>
-      <span className="text-xs text-neutral-500">{label}</span>
+    <div className="text-center">
+      <p className="text-2xl font-bold text-gold">{value}</p>
+      <p className="text-xs text-neutral-500 uppercase tracking-wider">{label}</p>
     </div>
   );
 }
