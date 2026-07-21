@@ -1,77 +1,90 @@
-import Link from "next/link";
-import { builders, formatCount, getBuilderProjects } from "@/lib/data";
-import { Avatar, Stat } from "@/components/avatar";
-import { StatusBadge } from "@/components/status-badge";
+'use client';
 
-export const metadata = {
-  title: "Builders — Dev Studio",
-};
+import { Avatar, Stat } from '@/components/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Trophy, TrendingUp } from 'lucide-react';
+
+const mockBuilders = [
+  {
+    rank: 1,
+    username: 'satoshi_sama',
+    followers: 2840,
+    projects: 12,
+    bio: 'Building the future of decentralized tech',
+  },
+  {
+    rank: 2,
+    username: 'elena_dev',
+    followers: 1950,
+    projects: 8,
+    bio: 'AI & Web3 engineer',
+  },
+  {
+    rank: 3,
+    username: 'marco_builds',
+    followers: 1620,
+    projects: 15,
+    bio: 'Full-stack developer & open source advocate',
+  },
+];
 
 export default function BuildersPage() {
-  const ranked = [...builders].sort((a, b) => b.followers - a.followers);
-
   return (
-    <main className="mx-auto max-w-6xl px-5 py-12">
-      <div className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight text-white">Meet the builders</h1>
-        <p className="mt-2 max-w-2xl text-neutral-400">
-          Discover developers building in public. Follow their work, explore their projects, and
-          watch applications evolve from idea to launch.
-        </p>
+    <div className="space-y-12 py-12">
+      {/* Header */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="space-y-4">
+          <h1 className="text-4xl font-serif font-bold">Discover Builders</h1>
+          <p className="text-neutral-400 max-w-2xl">
+            Meet the developers building amazing projects in public. Sorted by followers and community
+            engagement.
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {ranked.map((b) => {
-          const bProjects = getBuilderProjects(b.id);
-          return (
-            <div
-              key={b.id}
-              className="card-hover rounded-2xl border border-line bg-ink-900/60 p-5"
-            >
-              <div className="flex items-center gap-3">
-                <Avatar name={b.name} initials={b.avatar} size="lg" />
-                <div className="min-w-0">
-                  <p className="truncate font-semibold text-white">{b.name}</p>
-                  <p className="text-xs text-neutral-500">@{b.handle} · {b.location}</p>
+      {/* Leaderboard */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="space-y-4">
+          {mockBuilders.map((builder, idx) => (
+            <Card key={builder.username} className="card-hover">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4 flex-1">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-gold/10">
+                      {idx === 0 ? (
+                        <Trophy className="h-6 w-6 text-gold" />
+                      ) : (
+                        <span className="font-bold text-gold text-lg">#{builder.rank}</span>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gold">{builder.username}</p>
+                      <p className="text-sm text-neutral-400">{builder.bio}</p>
+                    </div>
+                  </div>
+
+                  <div className="hidden md:flex items-center space-x-8">
+                    <div className="text-center">
+                      <p className="text-xl font-bold text-gold">{builder.followers}</p>
+                      <p className="text-xs text-neutral-500">FOLLOWERS</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xl font-bold text-gold">{builder.projects}</p>
+                      <p className="text-xs text-neutral-500">PROJECTS</p>
+                    </div>
+                  </div>
+
+                  <Button size="sm" className="ml-4">
+                    Follow
+                  </Button>
                 </div>
-              </div>
-
-              <p className="mt-3 text-sm text-neutral-400">{b.tagline}</p>
-
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {b.stack.map((s) => (
-                  <span
-                    key={s}
-                    className="rounded-full border border-line px-2 py-0.5 text-[11px] text-neutral-300"
-                  >
-                    {s}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-4 flex items-center gap-6 border-t border-line pt-4">
-                <Stat label="Followers" value={b.followers} />
-                <Stat label="Projects" value={b.projects} />
-              </div>
-
-              {bProjects.length > 0 && (
-                <div className="mt-4 space-y-2">
-                  {bProjects.slice(0, 2).map((p) => (
-                    <Link
-                      key={p.id}
-                      href={`/projects/${p.slug}`}
-                      className="flex items-center justify-between rounded-lg border border-line p-2.5 text-sm transition-colors hover:border-brand-500"
-                    >
-                      <span className="truncate text-neutral-300">{p.name}</span>
-                      <StatusBadge status={p.status} />
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
-    </main>
+    </div>
   );
 }

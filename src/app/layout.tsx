@@ -1,49 +1,34 @@
-import type { Metadata, Viewport } from "next";
-import "./globals.css";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { ReactNode } from 'react';
+import { SiteHeader } from '@/components/site-header';
+import { SiteFooter } from '@/components/site-footer';
+import '@/app/globals.css';
 
-export const metadata: Metadata = {
-  title: "Dev Studio — Build in public",
-  description:
-    "Dev Studio is a builder platform for developers who want to build in public. Create projects, share updates, and track development progress with your community.",
-  keywords: ["dev", "builder", "projects", "community", "ai", "poker", "blockchain"],
+export const metadata = {
+  title: 'Dev Studio - Build in Public',
+  description: 'Create projects, share updates, and track development progress while your community follows the journey from idea to launch.',
   openGraph: {
-    title: "Dev Studio — Build in public",
-    description: "A members' atelier for developers who build in public",
-    url: "https://devstudio.build",
-    siteName: "Dev Studio",
-    images: [
-      {
-        url: "https://devstudio.build/og-image.png",
-        width: 1200,
-        height: 630,
-      },
-    ],
-    type: "website",
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://devstudio.bagsfm.com',
+    siteName: 'Dev Studio',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: '@bagsfm',
   },
 };
 
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-  themeColor: "#08070a",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="bg-background">
-      <body className="antialiased">
-        <div className="flex min-h-screen flex-col">
-          <SiteHeader />
-          <div className="flex-1">{children}</div>
-          <SiteFooter />
-        </div>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <SiteHeader />
+        <main className="min-h-screen">{children}</main>
+        <SiteFooter />
       </body>
     </html>
   );

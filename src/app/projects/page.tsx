@@ -1,227 +1,131 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import Link from 'next/link'
-
-interface Project {
-  id: string
-  title: string
-  description: string
-  tagline: string
-  status: string
-  category: string
-  followers_count: number
-  views_count: number
-  image_url: string
-  owner_id: string
-  created_at: string
-}
-
-interface Profile {
-  display_name: string
-  username: string
-  avatar_url: string
-}
+import { ProjectCard } from '@/components/project-card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useProjects } from '@/lib/hooks/use-projects';
+import { PROJECT_CATEGORIES, PROJECT_STATUSES } from '@/lib/constants';
+import { useState } from 'react';
+import { Search } from 'lucide-react';
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [profiles, setProfiles] = useState<Record<string, Profile>>({})
-  const [isLoading, setIsLoading] = useState(true)
-  const [selectedCategory, setSelectedCategory] = useState<string>('')
-  const [selectedStatus, setSelectedStatus] = useState<string>('')
-  const supabase = createClient()
+  const [selectedStatus, setSelectedStatus] = useState<string>();
+  const [selectedCategory, setSelectedCategory] = useState<string>();
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const categories = ['AI', 'Web3', 'DeFi', 'NFT', 'Gaming', 'Productivity', 'Social', 'Infrastructure']
-  const statuses = ['planning', 'in_progress', 'alpha', 'beta', 'launched']
-
-  useEffect(() => {
-    async function loadProjects() {
-      try {
-        let query = supabase
-          .from('projects')
-          .select('*')
-          .eq('visibility', 'public')
-          .order('created_at', { ascending: false })
-
-        if (selectedCategory) {
-          query = query.eq('category', selectedCategory)
-        }
-
-        if (selectedStatus) {
-          query = query.eq('status', selectedStatus)
-        }
-
-        const { data: projectsData, error } = await query
-
-        if (error) throw error
-
-        if (projectsData) {
-          setProjects(projectsData)
-
-          // Fetch profiles for all project owners
-          const ownerIds = [...new Set(projectsData.map((p) => p.owner_id))]
-          const { data: profilesData } = await supabase
-            .from('profiles')
-            .select('id, display_name, username, avatar_url')
-            .in('id', ownerIds)
-
-          if (profilesData) {
-            const profileMap = Object.fromEntries(
-              profilesData.map((p: any) => [p.id, p])
-            )
-            setProfiles(profileMap)
-          }
-        }
-      } catch (error) {
-        console.error('Error loading projects:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadProjects()
-  }, [selectedCategory, selectedStatus, supabase])
-
-  const statusColors: Record<string, string> = {
-    planning: 'bg-neutral-500/20 text-neutral-300',
-    in_progress: 'bg-blue-500/20 text-blue-300',
-    alpha: 'bg-yellow-500/20 text-yellow-300',
-    beta: 'bg-purple-500/20 text-purple-300',
-    launched: 'bg-green-500/20 text-green-300',
-  }
+  const { projects, loading, error, pagination, refetch } = useProjects({
+    status: selectedStatus,
+    category: selectedCategory,
+    search: searchQuery,
+  });
 
   return (
-    <main className="mx-auto max-w-6xl px-5 py-12">
+    <div className="space-y-8 py-12">
       {/* Header */}
-      <div className="mb-10">
-        <h1 className="serif text-4xl font-semibold text-white mb-2">Discover projects</h1>
-        <p className="text-neutral-400 max-w-2xl">
-          Explore new builders, discover projects early, and watch applications evolve in real time. 
-          Filter by category or status to find what&apos;s being built right now.
-        </p>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-4xl font-serif font-bold">Explore Projects</h1>
+            <p className="mt-2 text-neutral-400">Discover amazing projects being built in public</p>
+          </div>
+
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-500" />
+            <input
+              type="text"
+              placeholder="Search projects..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-ink-800 border border-neutral-700 rounded-lg pl-10 pr-4 py-2 text-neutral-300 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Filters */}
-      <div className="mb-8 space-y-4">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-4">
         <div>
-          <h3 className="text-sm font-medium text-neutral-300 mb-3">Category</h3>
+          <p className="text-sm font-semibold text-neutral-400 mb-2">Status</p>
           <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedCategory('')}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                selectedCategory === ''
-                  ? 'bg-brand-500/20 text-brand-300'
-                  : 'border border-[var(--color-hairline)] text-neutral-400 hover:border-brand-500'
-              }`}
-            >
-              All
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                  selectedCategory === cat
-                    ? 'bg-brand-500/20 text-brand-300'
-                    : 'border border-[var(--color-hairline)] text-neutral-400 hover:border-brand-500'
-                }`}
+            {PROJECT_STATUSES.map((status) => (
+              <Button
+                key={status}
+                variant={selectedStatus === status ? 'default' : 'secondary'}
+                size="sm"
+                onClick={() => setSelectedStatus(selectedStatus === status ? undefined : status)}
               >
-                {cat}
-              </button>
+                {status}
+              </Button>
             ))}
           </div>
         </div>
 
         <div>
-          <h3 className="text-sm font-medium text-neutral-300 mb-3">Status</h3>
+          <p className="text-sm font-semibold text-neutral-400 mb-2">Category</p>
           <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedStatus('')}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                selectedStatus === ''
-                  ? 'bg-brand-500/20 text-brand-300'
-                  : 'border border-[var(--color-hairline)] text-neutral-400 hover:border-brand-500'
-              }`}
-            >
-              All
-            </button>
-            {statuses.map((status) => (
-              <button
-                key={status}
-                onClick={() => setSelectedStatus(status)}
-                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors capitalize ${
-                  selectedStatus === status
-                    ? 'bg-brand-500/20 text-brand-300'
-                    : 'border border-[var(--color-hairline)] text-neutral-400 hover:border-brand-500'
-                }`}
+            {PROJECT_CATEGORIES.map((category) => (
+              <Button
+                key={category}
+                variant={selectedCategory === category ? 'default' : 'secondary'}
+                size="sm"
+                onClick={() => setSelectedCategory(selectedCategory === category ? undefined : category)}
               >
-                {status.replace('_', ' ')}
-              </button>
+                {category}
+              </Button>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Projects grid */}
-      {isLoading ? (
-        <div className="text-center text-neutral-400">Loading projects...</div>
-      ) : projects.length === 0 ? (
-        <div className="rounded-2xl border border-[var(--color-hairline)] bg-ink-900/60 p-12 text-center">
-          <p className="text-neutral-400">No projects found matching your filters</p>
-        </div>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => {
-            const creator = profiles[project.owner_id]
-            return (
-              <Link
-                key={project.id}
-                href={`/projects/${project.id}`}
-                className="card-hover group flex flex-col rounded-2xl border border-[var(--color-hairline)] bg-ink-900/60 overflow-hidden transition-all"
-              >
-                {project.image_url && (
-                  <div className="h-40 w-full overflow-hidden bg-gradient-to-br from-brand-500/20 to-transparent">
-                    <img
-                      src={project.image_url}
-                      alt={project.title}
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform"
-                    />
-                  </div>
-                )}
+      {/* Projects Grid */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {error && (
+          <Card className="border-red-500/50 bg-red-500/10">
+            <CardContent className="text-red-400">{error}</CardContent>
+          </Card>
+        )}
 
-                <div className="flex flex-1 flex-col p-6">
-                  <div className="mb-3 flex items-start justify-between gap-2">
-                    <h3 className="serif text-lg font-semibold text-white group-hover:text-brand-400 transition-colors flex-1">
-                      {project.title}
-                    </h3>
-                    <span
-                      className={`text-xs font-medium px-2 py-1 rounded capitalize whitespace-nowrap ${statusColors[project.status] || statusColors.planning}`}
-                    >
-                      {project.status.replace('_', ' ')}
-                    </span>
-                  </div>
+        {loading ? (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="glass h-80 animate-pulse" />
+            ))}
+          </div>
+        ) : projects.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-neutral-400">No projects found. Try adjusting your filters.</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {projects.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
+            </div>
 
-                  <p className="text-sm text-neutral-400 line-clamp-2 mb-4 flex-1">
-                    {project.tagline || project.description}
-                  </p>
-
-                  {creator && (
-                    <div className="mb-4 text-xs text-neutral-500">
-                      by <span className="text-brand-400">{creator.display_name}</span>
-                    </div>
-                  )}
-
-                  <div className="flex items-center justify-between text-xs text-neutral-500 border-t border-[var(--color-hairline)] pt-4">
-                    <span>{project.followers_count || 0} followers</span>
-                    <span>{project.views_count || 0} views</span>
-                  </div>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
-      )}
-    </main>
-  )
+            {/* Pagination */}
+            {pagination.totalPages > 1 && (
+              <div className="mt-12 flex items-center justify-center space-x-2">
+                <Button variant="ghost" disabled>
+                  Previous
+                </Button>
+                {Array.from({ length: pagination.totalPages }).map((_, i) => (
+                  <Button
+                    key={i + 1}
+                    variant={i + 1 === pagination.page ? 'default' : 'ghost'}
+                    size="sm"
+                  >
+                    {i + 1}
+                  </Button>
+                ))}
+                <Button variant="ghost">Next</Button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
 }

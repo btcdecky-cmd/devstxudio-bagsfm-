@@ -1,61 +1,86 @@
-import { seedFeed } from "@/lib/data";
-import { LiveFeed } from "@/components/live-feed";
+'use client';
 
-export const metadata = {
-  title: "Live Build Feed — Dev Studio",
-};
-
-const highlights = [
-  { icon: "♠", label: "Agent matches", body: "Poker agents grind hands and post results in real time." },
-  { icon: "◆", label: "Commits & deploys", body: "Every push and deploy from the community, live." },
-  { icon: "🚀", label: "Launches & IPOs", body: "See apps ship and coins go tradable the moment it happens." },
-];
+import { useFeed } from '@/lib/hooks/use-feed';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { getRelativeTime } from '@/lib/utils';
+import { Activity } from 'lucide-react';
 
 export default function LivePage() {
+  const { events, loading, error } = useFeed();
+
+  const eventTypeConfig: Record<string, { label: string; color: string }> = {
+    commit: { label: '📝 Commit', color: 'bg-blue-500' },
+    deploy: { label: '🚀 Deploy', color: 'bg-green-500' },
+    launch: { label: '🎉 Launch', color: 'bg-purple-500' },
+    milestone: { label: '🏁 Milestone', color: 'bg-gold' },
+    project_created: { label: '✨ New Project', color: 'bg-yellow-500' },
+  };
+
   return (
-    <main className="mx-auto max-w-6xl px-5 py-12">
-      <div className="mb-8">
-        <span className="eyebrow inline-flex items-center gap-2">
-          <span className="live-dot h-1.5 w-1.5 rounded-full bg-brand-500" /> real-time
-        </span>
-        <h1 className="serif mt-3 text-3xl font-semibold tracking-tight text-white">Live Build Feed</h1>
-        <p className="mt-2 max-w-2xl text-neutral-400">
-          A powerful real-time stream of everything happening across Dev Studio — agent matches,
-          commits, deploys, launches, and token IPOs, as they happen. Watch applications evolve
-          live, second by second.
-        </p>
+    <div className="space-y-8 py-12">
+      {/* Header */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center space-x-3 mb-4">
+          <Activity className="h-6 w-6 text-gold animate-pulse" />
+          <span className="text-sm font-semibold text-gold uppercase tracking-wider">Live Feed</span>
+        </div>
+        <h1 className="text-4xl font-serif font-bold">What's Happening Now</h1>
+        <p className="mt-2 text-neutral-400">Real-time updates from builders in our community</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-        <LiveFeed initial={seedFeed} />
+      {/* Feed */}
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+        {error && (
+          <Card className="border-red-500/50 bg-red-500/10">
+            <CardContent className="text-red-400 pt-6">{error}</CardContent>
+          </Card>
+        )}
 
-        <aside className="space-y-4">
-          <div className="rounded-2xl border border-line bg-ink-900/60 p-5">
-            <h2 className="mb-3 text-sm font-semibold text-white">What you&apos;ll see</h2>
-            <div className="space-y-3">
-              {highlights.map((h) => (
-                <div key={h.label} className="flex gap-3">
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand-500/20 to-accent-500/20 text-brand-400 ring-1 ring-inset ring-brand-400/20">
-                    {h.icon}
-                  </span>
-                  <div>
-                    <p className="text-sm font-medium text-white">{h.label}</p>
-                    <p className="text-xs text-neutral-400">{h.body}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {loading ? (
+          <div className="space-y-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Card key={i} className="animate-pulse">
+                <CardContent className="h-24 pt-6" />
+              </Card>
+            ))}
           </div>
-
-          <div className="rounded-2xl border border-line bg-gradient-to-br from-brand-500/10 to-accent-500/10 p-5">
-            <p className="text-sm font-medium text-white">Follow the journey</p>
-            <p className="mt-1 text-xs text-neutral-400">
-              The feed aggregates every builder&apos;s updates into one live timeline — your
-              front-row seat to the build-in-public movement.
-            </p>
+        ) : events.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-neutral-400">No events yet. Check back soon!</p>
           </div>
-        </aside>
+        ) : (
+          <div className="space-y-4">
+            {events.map((event) => {
+              const config = eventTypeConfig[event.type] || { label: event.type, color: 'bg-gray-500' };
+              return (
+                <Card key={event.id} className="card-hover">
+                  <CardContent className="pt-6">
+                    <div className="flex items-start space-x-4">
+                      <div className={`${config.color} h-10 w-10 rounded-lg flex items-center justify-center text-white flex-shrink-0`}>
+                        <span className="text-sm font-bold">•</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <Badge variant="secondary" className="text-xs">
+                            {event.builder_name}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {config.label}
+                          </Badge>
+                        </div>
+                        <p className="font-semibold text-gold mb-2">{event.project_name}</p>
+                        <p className="text-neutral-400 text-sm mb-2">{event.message}</p>
+                        <p className="text-xs text-neutral-500">{getRelativeTime(event.created_at)}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </main>
+    </div>
   );
 }
