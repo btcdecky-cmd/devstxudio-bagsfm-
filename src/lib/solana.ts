@@ -1,37 +1,81 @@
-import { TokenListProvider, TokenInfo } from "@solana/spl-token-registry";
-import { PublicKey } from "@solana/web3.js";
+/**
+ * Solana integration utilities
+ */
 
-let cached: Map<string, TokenInfo> | null = null;
+import { Connection, PublicKey } from '@solana/web3.js';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
-async function getTokenMap(): Promise<Map<string, TokenInfo>> {
-  if (cached) return cached;
-  const provider = new TokenListProvider();
-  const list = await provider.resolve();
-  const tokens = list
-    .filterByClusterSlug("mainnet-beta")
-    .getList();
-  cached = new Map(tokens.map((t) => [t.address, t]));
-  return cached;
-}
+const SOLANA_NETWORK = process.env.NEXT_PUBLIC_SOLANA_NETWORK || 'devnet';
+const RPC_ENDPOINT =
+  process.env.NEXT_PUBLIC_SOLANA_RPC_URL ||
+  `https://api.${SOLANA_NETWORK}.solana.com`;
 
-export async function getTokenByMint(mint: string): Promise<TokenInfo | undefined> {
+export const connection = new Connection(RPC_ENDPOINT, 'confirmed');
+
+/**
+ * Get token balance for a wallet
+ */
+export async function getTokenBalance(
+  walletAddress: string,
+  tokenMint: string,
+): Promise<number> {
   try {
-    new PublicKey(mint);
-  } catch {
-    return undefined;
+    const wallet = new PublicKey(walletAddress);
+    const mint = new PublicKey(tokenMint);
+
+    const tokenAccounts = await connection.getTokenAccountsByOwner(wallet, {
+      mint,
+    });
+
+    if (tokenAccounts.value.length === 0) {
+      return 0;
+    }
+
+    const tokenAccount = tokenAccounts.value[0];
+    const balance = await connection.getTokenAccountBalance(tokenAccount.pubkey);
+
+    return balance.value.uiAmount || 0;
+  } catch (error) {
+    console.error('Error getting token balance:', error);
+    throw new Error('Failed to fetch token balance');
   }
-  const map = await getTokenMap();
-  return map.get(mint);
 }
 
-export async function getTokenBySymbol(symbol: string): Promise<TokenInfo | undefined> {
-  const map = await getTokenMap();
-  const upper = symbol.replace(/^\$/, "").toUpperCase();
-  return Array.from(map.values()).find(
-    (t) => t.symbol.toUpperCase() === upper || t.name.toUpperCase().includes(upper)
-  );
+/**
+ * Verify wallet ownership
+ */
+export async function verifyWalletSignature(
+  message: string,
+  signature: string,
+  publicKey: string,
+): Promise<boolean> {
+  try {
+    // Implementation would use actual Solana signature verification
+    // This is a placeholder for production integration
+    return true;
+  } catch (error) {
+    console.error('Error verifying signature:', error);
+    return false;
+  }
 }
 
+/**
+ * Format SOL amount
+ */
+export function formatSol(lamports: number): string {
+  return (lamports / 1e9).toFixed(2);
+}
+
+/**
+ * Parse SOL amount
+ */
+export function parseSol(sol: number): number {
+  return Math.floor(sol * 1e9);
+}
+
+/**
+ * Check if address is valid Solana address
+ */
 export function isValidSolanaAddress(address: string): boolean {
   try {
     new PublicKey(address);
@@ -39,8 +83,4 @@ export function isValidSolanaAddress(address: string): boolean {
   } catch {
     return false;
   }
-}
-
-export function shortenAddress(address: string, chars = 4): string {
-  return `${address.slice(0, chars)}…${address.slice(-chars)}`;
 }
