@@ -57,12 +57,12 @@ export default function Home() {
             updates, track development progress, and grow your community from idea to launch.
           </p>
           <div className="flex flex-col items-center justify-center space-y-4 pt-6 sm:flex-row sm:space-x-4 sm:space-y-0">
-            <Button size="lg" asChild>
+            <Button size="lg">
               <Link href={ROUTES.PROJECTS}>
                 Explore Projects <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline">
               <Link href={ROUTES.ACCESS}>Get Early Access</Link>
             </Button>
           </div>
@@ -109,10 +109,10 @@ export default function Home() {
           <h2 className="text-3xl font-serif font-bold">Ready to Build in Public?</h2>
           <p className="text-neutral-400">Join thousands of developers sharing their journey</p>
           <div className="flex flex-col items-center justify-center space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
-            <Button size="lg" asChild>
+            <Button size="lg">
               <Link href={ROUTES.ACCESS}>Start Building</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline">
               <Link href={ROUTES.BUILDERS}>View Top Builders</Link>
             </Button>
           </div>

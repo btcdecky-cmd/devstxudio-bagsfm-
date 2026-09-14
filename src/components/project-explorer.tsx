@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { Project } from "@/lib/data";
 import { categories, statuses } from "@/lib/data";
+import type { Project } from "@/lib/types";
 import { ProjectCard } from "@/components/project-card";
 
 export function ProjectExplorer({ projects }: { projects: Project[] }) {

@@ -51,6 +51,7 @@ export interface Project {
   tagline: string;
   status: ProjectStatus;
   category: ProjectCategory;
+  tags: string[];
   cover_image_url: string | null;
   logo_url: string | null;
   website_url: string | null;

@@ -14,8 +14,6 @@ export default function NewProjectPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-  const supabase = createClient()
-
   const categories = ['AI', 'Web3', 'DeFi', 'NFT', 'Gaming', 'Productivity', 'Social', 'Infrastructure']
   const statuses = ['planning', 'in_progress', 'alpha', 'beta', 'launched']
 
@@ -25,6 +23,7 @@ export default function NewProjectPage() {
     setError(null)
 
     try {
+      const supabase = createClient()
       const {
         data: { user },
       } = await supabase.auth.getUser()

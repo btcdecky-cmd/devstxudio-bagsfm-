@@ -46,10 +46,10 @@ export function SiteHeader() {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="ghost" size="sm">
               <Link href={ROUTES.DASHBOARD}>Dashboard</Link>
             </Button>
-            <Button size="sm" asChild>
+            <Button size="sm">
               <Link href={ROUTES.ACCESS}>Get Access</Link>
             </Button>
 
