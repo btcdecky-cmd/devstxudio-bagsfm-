@@ -7,11 +7,10 @@ import { ROUTES, SITE_NAME } from '@/lib/constants';
 import { buttonVariants } from './ui/button';
 
 const navigation = [
-  { name: 'Projects', href: ROUTES.PROJECTS },
+  { name: 'Discover', href: ROUTES.PROJECTS },
   { name: 'Builders', href: ROUTES.BUILDERS },
+  { name: 'Live activity', href: ROUTES.LIVE },
   { name: 'Arena', href: ROUTES.ARENA },
-  { name: 'Builder', href: ROUTES.BUILDER },
-  { name: 'Live', href: ROUTES.LIVE },
 ];
 
 export function SiteHeader() {
@@ -24,7 +23,7 @@ export function SiteHeader() {
           {/* Logo */}
           <Link href={ROUTES.HOME} className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-gold to-gold-light flex items-center justify-center">
-              <span className="text-xs font-bold text-ink-900">DS</span>
+              <span className="text-xs font-bold text-ink-900">B</span>
             </div>
             <span className="hidden font-serif text-lg font-bold text-gold sm:inline">
               {SITE_NAME}
