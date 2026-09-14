@@ -4,8 +4,9 @@ import { createJsonResponse, withErrorHandling } from '@/lib/api-middleware';
 import { NotFoundError } from '@/lib/errors';
 import type { ProjectDetail } from '@/lib/types';
 
-export const GET = withErrorHandling(async (req: NextRequest, { params }: { params: { slug: string } }) => {
-  const project = getProjectBySlug(params.slug);
+export const GET = withErrorHandling(async (_req: NextRequest, { params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
   if (!project) {
     throw new NotFoundError('Project');
   }
@@ -25,8 +26,9 @@ export const GET = withErrorHandling(async (req: NextRequest, { params }: { para
   return createJsonResponse(projectDetail);
 });
 
-export const PATCH = withErrorHandling(async (req: NextRequest, { params }: { params: { slug: string } }) => {
-  const project = getProjectBySlug(params.slug);
+export const PATCH = withErrorHandling(async (req: NextRequest, { params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
   if (!project) {
     throw new NotFoundError('Project');
   }

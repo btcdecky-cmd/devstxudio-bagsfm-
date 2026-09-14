@@ -3,7 +3,31 @@
  */
 
 import { Connection, PublicKey } from '@solana/web3.js';
+import { TokenListProvider, type TokenInfo } from '@solana/spl-token-registry';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+
+let tokenListPromise: Promise<TokenInfo[]> | null = null;
+
+async function getTokenList(): Promise<TokenInfo[]> {
+  tokenListPromise ??= new TokenListProvider()
+    .resolve()
+    .then((container) => container.filterByChainId(101).getList());
+  return tokenListPromise;
+}
+
+export async function getTokenBySymbol(symbol: string): Promise<TokenInfo | undefined> {
+  const normalized = symbol.toLowerCase();
+  return (await getTokenList()).find((token) => token.symbol.toLowerCase() === normalized);
+}
+
+export async function getTokenByMint(mint: string): Promise<TokenInfo | undefined> {
+  return (await getTokenList()).find((token) => token.address === mint);
+}
+
+export function shortenAddress(address: string, chars = 4): string {
+  if (address.length <= chars * 2) return address;
+  return `${address.slice(0, chars)}...${address.slice(-chars)}`;
+}
 
 const SOLANA_NETWORK = process.env.NEXT_PUBLIC_SOLANA_NETWORK || 'devnet';
 const RPC_ENDPOINT =

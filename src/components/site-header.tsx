@@ -4,7 +4,7 @@ import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { ROUTES, SITE_NAME } from '@/lib/constants';
-import { Button } from './ui/button';
+import { buttonVariants } from './ui/button';
 
 const navigation = [
   { name: 'Projects', href: ROUTES.PROJECTS },
@@ -18,9 +18,9 @@ export function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-neutral-800">
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08090b]/80 backdrop-blur-xl">
+      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
+        <div className="flex h-[4.5rem] items-center justify-between">
           {/* Logo */}
           <Link href={ROUTES.HOME} className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-gold to-gold-light flex items-center justify-center">
@@ -46,12 +46,12 @@ export function SiteHeader() {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href={ROUTES.DASHBOARD}>Dashboard</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href={ROUTES.ACCESS}>Get Access</Link>
-            </Button>
+            <Link href={ROUTES.DASHBOARD} className={`${buttonVariants({ variant: 'ghost', size: 'sm' })} max-[639px]:hidden`}>
+              Dashboard
+            </Link>
+            <Link href={ROUTES.ACCESS} className={`${buttonVariants({ size: 'sm' })} max-[639px]:hidden`}>
+              Get Access
+            </Link>
 
             {/* Mobile Menu Button */}
             <button

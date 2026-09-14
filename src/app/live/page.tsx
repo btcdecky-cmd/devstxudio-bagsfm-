@@ -25,7 +25,7 @@ export default function LivePage() {
           <Activity className="h-6 w-6 text-gold animate-pulse" />
           <span className="text-sm font-semibold text-gold uppercase tracking-wider">Live Feed</span>
         </div>
-        <h1 className="text-4xl font-serif font-bold">What's Happening Now</h1>
+        <h1 className="text-4xl font-serif font-bold">What&apos;s Happening Now</h1>
         <p className="mt-2 text-neutral-400">Real-time updates from builders in our community</p>
       </div>
 

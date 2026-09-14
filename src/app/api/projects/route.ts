@@ -79,6 +79,7 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
     tagline,
     status: 'idea',
     category,
+    tags: [],
     cover_image_url: null,
     logo_url: null,
     website_url: null,

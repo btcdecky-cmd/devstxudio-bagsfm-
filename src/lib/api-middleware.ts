@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DevStudioError } from '@/lib/errors';
 
-export function withErrorHandling(handler: (req: NextRequest) => Promise<NextResponse>) {
+export function withErrorHandling<TContext = unknown>(
+  handler: (req: NextRequest, context: TContext) => Promise<NextResponse>,
+) {
   return async (req: NextRequest) => {
     try {
-      return await handler(req);
+      return await handler(req, {} as TContext);
     } catch (error) {
       console.error('API Error:', error);
 
