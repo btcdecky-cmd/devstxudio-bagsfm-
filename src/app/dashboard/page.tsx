@@ -1,67 +1,19 @@
-'use client';
-
-import { useUser } from '@/lib/hooks/use-user';
+import { ArrowUpRight, BarChart3, CircleDollarSign, Megaphone, Plus, ShieldCheck, Sparkles, WalletCards } from 'lucide-react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+const campaigns = [
+  { name: 'Developer launch / Q3', status: 'Active', spend: '$4,280', progress: '53%', ctr: '3.82%' },
+  { name: 'Open source maintainer fund', status: 'Under review', spend: '$0', progress: '0%', ctr: '—' },
+  { name: 'Ship faster with Stackline', status: 'Paused', spend: '$1,120', progress: '28%', ctr: '2.41%' },
+];
 
 export default function DashboardPage() {
-  const { user, loading } = useUser();
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="animate-spin-slow text-4xl">⚙️</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-serif font-bold">Sign In Required</h1>
-          <p className="text-neutral-400">Please sign in to access your dashboard</p>
-          <Button size="lg">Sign In</Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-8 py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-serif font-bold">Dashboard</h1>
-        <p className="mt-2 text-neutral-400">Welcome back, {user.username}!</p>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-neutral-400">Your Projects</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-gold">{user.projects_count}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-neutral-400">Followers</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-gold">{user.followers_count}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-neutral-400">Following</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-gold">{user.following_count}</p>
-          </CardContent>
-        </Card>
-      </div>
+    <div className="mx-auto max-w-7xl space-y-10 px-4 py-10 sm:px-6 lg:px-8">
+      <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="eyebrow">Advertiser workspace</p><h1 className="mt-3 text-4xl font-semibold text-white">Good to see you, builder.</h1><p className="mt-2 text-neutral-400">Plan, review, and measure campaigns across the Dev Ads Network.</p></div><div className="flex gap-3"><Button variant="outline">AI campaign copilot</Button><Button><Plus className="mr-2 h-4 w-4" />New campaign</Button></div></div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[[BarChart3, 'Impressions', '284.6K', '+18.4%'], [Megaphone, 'Clicks', '10,872', '+12.1%'], [CircleDollarSign, 'Spend', '$5,400', 'of $12K'], [WalletCards, 'Conversions', '1,842', '+9.7%']].map(([Icon, label, value, change]) => <div className="glass p-5" key={label as string}><Icon className="h-4 w-4 text-amber-300" /><p className="mt-5 text-sm text-neutral-500">{label as string}</p><p className="mt-1 text-2xl font-semibold text-white">{value as string}</p><p className="mt-1 text-xs text-emerald-300">{change as string}</p></div>)}</div>
+      <div className="grid gap-6 lg:grid-cols-[1.4fr_.6fr]"><section className="glass overflow-hidden"><div className="flex items-center justify-between border-b border-white/10 p-5"><div><h2 className="text-lg font-semibold text-white">Campaigns</h2><p className="mt-1 text-sm text-neutral-500">Your latest delivery and review activity.</p></div><Link className="text-sm text-amber-300" href="/projects">View reports <ArrowUpRight className="ml-1 inline h-4 w-4" /></Link></div><div className="divide-y divide-white/10">{campaigns.map((campaign) => <div className="grid gap-3 p-5 sm:grid-cols-[1.4fr_.7fr_.5fr_.5fr] sm:items-center" key={campaign.name}><div><p className="font-medium text-white">{campaign.name}</p><p className="mt-1 text-xs text-neutral-500">Budget delivery {campaign.progress}</p></div><span className={`w-fit rounded-full px-2.5 py-1 text-xs ${campaign.status === 'Active' ? 'bg-emerald-400/10 text-emerald-300' : campaign.status === 'Paused' ? 'bg-white/10 text-neutral-400' : 'bg-amber-300/10 text-amber-300'}`}>{campaign.status}</span><span className="text-sm text-neutral-300">{campaign.spend}</span><span className="text-sm text-neutral-400">{campaign.ctr} CTR</span></div>)}</div></section><aside className="space-y-6"><div className="glass p-6"><div className="flex items-center gap-3"><div className="rounded-lg bg-amber-300/10 p-2"><Sparkles className="h-5 w-5 text-amber-300" /></div><h2 className="font-semibold text-white">Creative Studio</h2></div><p className="mt-4 text-sm leading-6 text-neutral-400">Generate copy variations, adapt formats, and flag claims before submitting for review.</p><Button className="mt-5 w-full" variant="outline">Open studio</Button></div><div className="glass p-6"><div className="flex items-center gap-3"><ShieldCheck className="h-5 w-5 text-emerald-300" /><h2 className="font-semibold text-white">Network health</h2></div><p className="mt-4 text-sm text-neutral-400">All delivery systems operational.</p><div className="mt-4 h-2 rounded-full bg-emerald-400/20"><div className="h-full w-full rounded-full bg-emerald-400" /></div></div></aside></div>
     </div>
   );
 }

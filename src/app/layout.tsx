@@ -4,8 +4,8 @@ import { SiteFooter } from '@/components/site-footer';
 import '@/app/globals.css';
 
 export const metadata = {
-  title: 'Dev Studio - Build in Public',
-  description: 'Create projects, share updates, and track development progress while your community follows the journey from idea to launch.',
+  title: 'Dev Ads Network | Developer-first advertising',
+  description: 'Reach builders, grow developer products, and monetize trusted ecosystem surfaces with transparent advertising.',
   openGraph: {
     type: 'website',
     locale: 'en_US',
