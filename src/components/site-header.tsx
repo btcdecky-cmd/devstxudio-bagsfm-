@@ -4,7 +4,7 @@ import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { ROUTES, SITE_NAME } from '@/lib/constants';
-import { Button } from './ui/button';
+import { buttonVariants } from './ui/button';
 
 const navigation = [
   { name: 'Projects', href: ROUTES.PROJECTS },
@@ -46,12 +46,12 @@ export function SiteHeader() {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <Link href={ROUTES.DASHBOARD}>Dashboard</Link>
-            </Button>
-            <Button size="sm">
-              <Link href={ROUTES.ACCESS}>Get Access</Link>
-            </Button>
+            <Link href={ROUTES.DASHBOARD} className={`${buttonVariants({ variant: 'ghost', size: 'sm' })} max-[639px]:hidden`}>
+              Dashboard
+            </Link>
+            <Link href={ROUTES.ACCESS} className={`${buttonVariants({ size: 'sm' })} max-[639px]:hidden`}>
+              Get Access
+            </Link>
 
             {/* Mobile Menu Button */}
             <button
