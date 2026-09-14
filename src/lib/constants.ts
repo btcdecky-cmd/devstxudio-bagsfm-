@@ -2,8 +2,8 @@
  * Application-wide constants
  */
 
-export const SITE_NAME = 'Dev Studio';
-export const SITE_DESCRIPTION = 'Build in public. Create projects, share updates, and track development progress while your community follows the journey from idea to launch.';
+export const SITE_NAME = 'Bags.fm';
+export const SITE_DESCRIPTION = 'Discover the builders, products, and partners shaping the next ecosystem.';
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 // Pagination

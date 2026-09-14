@@ -4,13 +4,13 @@ import { SiteFooter } from '@/components/site-footer';
 import '@/app/globals.css';
 
 export const metadata = {
-  title: 'Dev Ads Network | Developer-first advertising',
-  description: 'Reach builders, grow developer products, and monetize trusted ecosystem surfaces with transparent advertising.',
+  title: 'Bags.fm | Discover what is being built',
+  description: 'Bags.fm is the ecosystem advertising and discovery platform helping builders, projects, and partners turn attention into measurable activity.',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://devstudio.bagsfm.com',
-    siteName: 'Dev Studio',
+    url: 'https://bags.fm',
+    siteName: 'Bags.fm',
   },
   twitter: {
     card: 'summary_large_image',
